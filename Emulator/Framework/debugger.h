@@ -12,7 +12,7 @@
 #ifndef _DEBUGGER_H
 #define _DEBUGGER_H
 
-void DBGVerticalLabel(int x,int y,char *labels[],int fgr,int bgr);
+void DBGVerticalLabel(int x,int y,const char *labels[],int fgr,int bgr);
 void DBGDefineKey(int keyID,int gfxKey);
 
 #include "sys_debug_system.h"

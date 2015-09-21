@@ -31,7 +31,7 @@ static void _GFXUpdateKeyRecord(int scancode,int isDown);
 //
 // *******************************************************************************************************************************
 
-void GFXOpenWindow(char *title,int width,int height,int colour) {
+void GFXOpenWindow(const char *title,int width,int height,int colour) {
 
 	if (SDL_Init( SDL_INIT_VIDEO ) < 0)	{											// Try to initialise SDL Video
 		exit(printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError()));
@@ -149,7 +149,7 @@ void GFXDefineCharacter(int nChar,int b1,int b2,int b3,int b4,int b5) {
 //
 // *******************************************************************************************************************************
 
-void GFXString(int xc,int yc,char *text,int size,int colour,int back) {
+void GFXString(int xc,int yc,const char *text,int size,int colour,int back) {
 	while (*text != '\0') {															// While more text
 		GFXCharacter(xc,yc,*text,size,colour,back);									// Draw text
 		text++;																		// Next character

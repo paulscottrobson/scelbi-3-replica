@@ -45,7 +45,7 @@ typedef struct _CPUSTATUS {
 } CPUSTATUS;
 
 CPUSTATUS *CPUGetStatus(void);														// Access CPU State
-void CPULoadBinary(char *fileName);													// Load Binary in.
+void CPULoadBinary(const char *fileName);											// Load Binary in.
 BYTE8 CPURead(WORD16 address);														// Access RAM
 void CPURequestInterrupt(void);														// Request Interrupt
 

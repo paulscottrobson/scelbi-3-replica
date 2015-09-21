@@ -138,7 +138,7 @@ void DBGDefineKey(int keyID,int gfxKey) {
 //											Draw a vertical set of labels (helper)
 // *******************************************************************************************************************************
 
-void DBGVerticalLabel(int x,int y,char *labels[],int fgr,int bgr) {
+void DBGVerticalLabel(int x,int y,const char *labels[],int fgr,int bgr) {
 	int n = 0;
 	while (labels[n] != NULL) {
 		GFXString(GRID(x,y),labels[n],GRIDSIZE,fgr,bgr);

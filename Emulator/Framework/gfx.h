@@ -51,13 +51,13 @@ int _GFXX(int x);
 int _GFXY(int y);
 int _GFXS(void);
 
-void GFXOpenWindow(char *title,int width,int height,int colour);
+void GFXOpenWindow(const char *title,int width,int height,int colour);
 void GFXStart(void);
 void GFXCloseWindow(void);
 
 void GFXRectangle(SDL_Rect *rc,int colour);
 void GFXCharacter(int xc,int yc,int character,int size,int colour,int back);
-void GFXString(int xc,int yc,char *text,int size,int colour,int back);
+void GFXString(int xc,int yc,const char *text,int size,int colour,int back);
 void GFXNumber(int xc,int yc,int number,int base,int width,int size,int colour,int back);
 int  GFXIsKeyPressed(int character);
 int  GFXToASCII(int ch,int applyModifiers);

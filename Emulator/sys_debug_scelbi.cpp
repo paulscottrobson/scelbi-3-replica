@@ -62,13 +62,13 @@ void DBGXRender(int *address,int showDisplay) {
 
 	CPUSTATUS *s = CPUGetStatus();													// Get the CPU Status
 
-	char *labels[] = { "A","B","C","D","E","H","L","M","C","Z","S","P","H","HL","BP","CY",NULL };
+	const char *labels[] = { "A","B","C","D","E","H","L","M","C","Z","S","P","H","HL","BP","CY",NULL };
 	n = 0;
 	while (labels[n] != NULL) {
 		GFXString(GRID(15,n),labels[n],GRIDSIZE,DBGC_ADDRESS,-1);
 		n++;
 	}
-	char *labels2[] = { "ST","IM","SS","PH","AD","DA","TS","","PC","SK",NULL };
+	const char *labels2[] = { "ST","IM","SS","PH","AD","DA","TS","","PC","SK",NULL };
 	n = 0;
 	while (labels2[n] != NULL) {
 		GFXString(GRID(25,n),labels2[n],GRIDSIZE,DBGC_ADDRESS,-1);

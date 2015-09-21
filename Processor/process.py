@@ -72,4 +72,4 @@ for i in range(0,256):
 handle.close()
 
 m = ",".join('"'+x+'"' for x in mnemonics)
-open("__8008mnemonics.h","w").write("static char *__mnemonics[] = { "+m+"};\n")
+open("__8008mnemonics.h","w").write("static const char *__mnemonics[] = { "+m+"};\n")

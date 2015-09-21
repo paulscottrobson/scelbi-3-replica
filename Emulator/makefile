@@ -1,7 +1,7 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = framework\main.c framework\gfx.c framework\debugger.c sys_processor.c sys_debug_scelbi.c drivers.c
+OBJS = framework\main.cpp framework\gfx.cpp framework\debugger.cpp sys_processor.cpp sys_debug_scelbi.cpp drivers.cpp
 #CC specifies which compiler we're using
-CC = gcc
+CC = g++
 
 #INCLUDE_PATHS specifies the additional include paths we'll need
 INCLUDE_PATHS = -IC:\mingw\sdl\include\SDL2 -Iframework -I.
@@ -12,7 +12,7 @@ LIBRARY_PATHS = -LC:\mingw\sdl\lib
 #COMPILER_FLAGS specifies the additional compilation options we're using
 # -w suppresses all warnings
 # -Wl,-subsystem,windows gets rid of the console window
-COMPILER_FLAGS = -std=c99 -Wall -DINCLUDE_DEBUGGING_SUPPORT -DWINDOWS
+COMPILER_FLAGS =  -Wall -DINCLUDE_DEBUGGING_SUPPORT -DWINDOWS
 
 #LINKER_FLAGS specifies the libraries we're linking against
 LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2

@@ -251,7 +251,7 @@ BYTE8 CPUExecute(WORD16 break1,WORD16 break2) {
 
 #include <stdio.h>
 
-void CPULoadBinary(char *fileName) {
+void CPULoadBinary(const char *fileName) {
 	FILE *f = fopen(fileName,"rb");
 	fread(ramMemory,1,RAMSIZE,f);
 	fclose(f);
