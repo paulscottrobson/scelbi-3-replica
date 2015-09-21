@@ -77,7 +77,7 @@ static BYTE8 interruptKey, stepKey, runKey;
 //												Fetch an instruction byte
 // *******************************************************************************************************************************
 
-static void _CPUFetch() {
+static inline void _CPUFetch() {
 	if (interruptMode == 0) {														// No jam
 		MA = PCTR;																	// Fetch from PC
 		PCTR = (PCTR + 1) & 0x3FFF;
@@ -85,7 +85,7 @@ static void _CPUFetch() {
 	} else {																		// IJAM on.
 		MA = 0;
 		MB = DRVReadToggleSwitches();												// Get the toggles to figure out what..
-		printf("JAM:%x\n",MB);
+		//printf("JAM:%x\n",MB);
 	}
 }
 // *******************************************************************************************************************************
@@ -143,7 +143,7 @@ static BYTE8 _CPUHasKeyBeenPressed(BYTE8 *state, BYTE8 keyID) {
 	if (newState != *state) {														// State changed
 		if (newState != 0) isPressed = 1;											// New state is down, set pressed
 		*state = newState;															// Update current state
-		if (isPressed) printf("%c pressed.\n",keyID);
+		//if (isPressed) printf("%c pressed.\n",keyID);
 	}
 	return isPressed;
 }
