@@ -10,6 +10,7 @@
 // *******************************************************************************************************************************
 
 #include "sys_processor.h"
+#include "drivers.h"
 
 // *******************************************************************************************************************************
 //															Timing
@@ -43,6 +44,12 @@ static BYTE8 	dataLamps;
 static BYTE8 ramMemory[RAMSIZE];													// System RAM.							
 
 // *******************************************************************************************************************************
+//														Other keys
+// *******************************************************************************************************************************
+
+static BYTE8 interruptKey, stepKey, runKey;
+
+// *******************************************************************************************************************************
 //											    Memory read and write macros.
 // *******************************************************************************************************************************
 
@@ -64,6 +71,8 @@ static BYTE8 ramMemory[RAMSIZE];													// System RAM.
 #define STATUS(s) 	status = (s)
 #define DISPLAY(a,d) { addressLamps = (a);dataLamps = (d); }
 
+#define FETCH2() 	{ FETCH();temp16 = ((((WORD16)MB) << 8) | MB) & 0x3FFF; }
+
 // *******************************************************************************************************************************
 //												Fetch an instruction byte
 // *******************************************************************************************************************************
@@ -74,7 +83,9 @@ static void _CPUFetch() {
 		PCTR = (PCTR + 1) & 0x3FFF;
 		READ();
 	} else {
-		// TODO: Read MB from toggle switches
+		MA = 0;
+		MB = DRVReadToggleSwitches();
+		printf("JAM:%x\n",MB);
 	}
 }
 // *******************************************************************************************************************************
@@ -122,6 +133,21 @@ void CPUReset(void) {
 }
 
 // *******************************************************************************************************************************
+//											Check to see if a key has been pressed
+// *******************************************************************************************************************************
+
+static BYTE8 _CPUHasKeyBeenPressed(BYTE8 *state, BYTE8 keyID) {
+	BYTE8 newState = DRVIsPushButtonPressed(keyID);									// Get state
+	BYTE8 isPressed = 0;
+	if (newState != *state) {														// State changed
+		if (newState != 0) isPressed = 1;											// New state is down, set pressed
+		*state = newState;															// Update current state
+		if (isPressed) printf("%c pressed.\n",keyID);
+	}
+	return isPressed;
+}
+
+// *******************************************************************************************************************************
 //													 Execute a single phase.
 // *******************************************************************************************************************************
 
@@ -139,7 +165,7 @@ BYTE8 CPUExecuteSinglePhase(void) {
 	canExecute = (HaltFlag == 0);													// Can execute command if Halt not set
 
 	if (singleStepMode != 0) {														// Single step mode ?
-		// TODO: If step key not pressed then don't execute this time.
+		if (_CPUHasKeyBeenPressed(&stepKey,DRVKEY_STEP) == 0) canExecute = 0;		// Can't execute if Step not pressed.
 	}
 
 	if (canExecute != 0) {															// If we can run an instruction this time.
@@ -153,16 +179,24 @@ BYTE8 CPUExecuteSinglePhase(void) {
 			default:
 				cpuPhase = 0;break;
 		}
-		if (cpuPhase == 0) interruptMode = 0;										// At end of instruction, int mode off.
+		if (cpuPhase == 0) {														// At end of instruction
+			interruptMode = 0;														// Interrupt mode off
+			//singleStepMode = 0;														// Step mode off.
+		}
 	}
 
-	if (canExecute == 0 && Cycles < CYCLES_PER_FRAME) return 0;						// Frame in progress, return 0.
+	if (canExecute != 0 && Cycles < CYCLES_PER_FRAME) return 0;						// Frame in progress, return 0.
+
+	if (Cycles >= CYCLES_PER_FRAME) Cycles -= CYCLES_PER_FRAME;
 	if (HaltFlag != 0) {															// If halt flag set.
 		Cycles = 0;																	// Fix up for HALT.
-		Cycles -= CYCLES_PER_FRAME;													// Adjust cycle counter
 	}
-	// TODO: Check run
-	// TODO: Check interrupt
+	if (_CPUHasKeyBeenPressed(&interruptKey,DRVKEY_INTERRUPT)) {					// Interrupt requested
+		interruptRequested = 1;
+	}
+	if (_CPUHasKeyBeenPressed(&runKey,DRVKEY_RUN)) {								// Run requested
+		singleStepMode = 0;
+	}
 	return FRAME_RATE;																// Return the frame rate for sync speed.
 }
 
@@ -174,10 +208,10 @@ BYTE8 CPUExecuteSinglePhase(void) {
 
 BYTE8 CPUExecuteInstruction(void) {
 	BYTE8 frameRate;
-	singleStepMode = 0;interruptMode = 0;interruptRequested = 0;					// Just run normally, no SCELBI stuff
-	do {
+	while (1) {
 		frameRate = CPUExecuteSinglePhase();										// Execute a phase
-	} while (cpuPhase != 0);														// Until back at phase zero.
+		if (frameRate != 0) return frameRate;
+	}
 	return frameRate;																// When we can exit.
 }
 

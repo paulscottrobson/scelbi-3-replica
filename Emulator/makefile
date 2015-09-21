@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = framework\main.c framework\gfx.c framework\debugger.c sys_processor.c sys_debug_scelbi.c
+OBJS = framework\main.c framework\gfx.c framework\debugger.c sys_processor.c sys_debug_scelbi.c drivers.c
 #CC specifies which compiler we're using
 CC = gcc
 
