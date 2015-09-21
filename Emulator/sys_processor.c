@@ -28,7 +28,7 @@ static BYTE8 	PSZValue,Carry,HaltFlag;											// Flags
 #define PCTR 	PC[PCIndex]															// Program counter
 
 static BYTE8  	MB,interruptRequested,PCIndex,cpuPhase,								// Internal states & registers
-									interruptMode,singleStepMode,status;
+									interruptMode,singleStepMode,status,opcode;
 static WORD16 	PC[8],MA,Cycles; 	
 
 static WORD16 	temp16;																// Work register
