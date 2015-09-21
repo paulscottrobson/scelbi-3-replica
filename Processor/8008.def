@@ -216,12 +216,12 @@ BF	 		8 		"cmp m"
 //									Conditional Jump or Call instructions
 // ************************************************************************************************************
 
-42-7A,8 	10 		"jmp $C"
+42-7A,8 	10 		"j$C @2"
 	* 0 	FETCH()																[PCTR:opcode]
 	* 0 	word16 = MB;FETCH();word16 = ((((WORD16)MB) << 8)|word16) & 0x3FFF; [PCTR:MB]
 	0 0 	if ($T) { PCTR = word16; }											[PCTR:MB]
 
-46-7E,8 	10 		"call $C"
+46-7E,8 	10 		"c$C @2"
 	* 0 	FETCH()																[PCTR:opcode]
 	* 0 	word16 = MB;FETCH();word16 = ((((WORD16)MB) << 8)|word16) & 0x3FFF; [PCTR:MB]
 	0 0 	if ($T) { PUSH();PCTR = word16; }									[PCTR:MB]
