@@ -61,8 +61,10 @@ void GFXString(int xc,int yc,const char *text,int size,int colour,int back);
 void GFXNumber(int xc,int yc,int number,int base,int width,int size,int colour,int back);
 int  GFXIsKeyPressed(int character);
 int  GFXToASCII(int ch,int applyModifiers);
+int  GFXTimer(void);
 void GFXSetCharacterSize(int xSize,int ySize);
 void GFXDefineCharacter(int nChar,int b1,int b2,int b3,int b4,int b5);
+
 void GFXXRender(SDL_Surface *surface);
 
 #endif
