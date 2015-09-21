@@ -16,12 +16,16 @@
 #include "sys_processor.h"
 #include "sys_debug_system.h"
 #include "debugger.h"
+#include "drivers.h"
 
 #include "__8008mnemonics.h"														// 8008 new style mnemonics
 
 #define DBGC_ADDRESS 	(0x0F0)														// Colour scheme.
 #define DBGC_DATA 		(0x0FF)														// (Background is in main.c)
 #define DBGC_HIGHLIGHT 	(0xFF0)
+
+static int xDisplay,yDisplay;														// Display position.
+static BYTE8 displayMemory[20*4];													// Video Memory
 
 // *******************************************************************************************************************************
 //												Reset the 8008
@@ -32,7 +36,20 @@ void DBGXReset(void) {
 }
 
 // *******************************************************************************************************************************
-//											This renders the debug screen
+//											Write to display memory
+// *******************************************************************************************************************************
+
+void DBGXWriteDisplay(BYTE8 x,BYTE8 y,BYTE8 ch) {
+	if (x < 20) xDisplay = x;
+	if (y < 4) yDisplay = y;
+	displayMemory[xDisplay+yDisplay*20] = ch;
+	if (++xDisplay == 20) {
+		xDisplay = 0;yDisplay = (yDisplay + 1) % 4;
+	}
+}
+
+// *******************************************************************************************************************************
+//										  This renders the debug screen
 // *******************************************************************************************************************************
 
 //	s.status = status;s.interruptMode = interruptMode;								// Internal statuses.
@@ -51,7 +68,7 @@ void DBGXRender(int *address,int showDisplay) {
 		GFXString(GRID(15,n),labels[n],GRIDSIZE,DBGC_ADDRESS,-1);
 		n++;
 	}
-	char *labels2[] = { "ST","IM","SS","PH","AD","DA","","PC","SK",NULL };
+	char *labels2[] = { "ST","IM","SS","PH","AD","DA","TS","","PC","SK",NULL };
 	n = 0;
 	while (labels2[n] != NULL) {
 		GFXString(GRID(25,n),labels2[n],GRIDSIZE,DBGC_ADDRESS,-1);
@@ -76,7 +93,7 @@ void DBGXRender(int *address,int showDisplay) {
 	DDC(s->cFlag);DDC(s->zFlag);DDC(s->sFlag);DDC(s->pFlag);DDC(s->hFlag);			// Draw the flags
 	DD(s->hl,4);DD(address[3],4);DD(s->cycles,4);									// The rest.
 
-	n = 7;																			// PCTR
+	n = 9;																			// PCTR
 	GFXNumber(GRID(28,n),s->pc,16,4,GRIDSIZE,DBGC_DATA,-1);
 	n++;
 	GFXString(GRID(28,n),"----",GRIDSIZE,DBGC_DATA,-1);								// Translated stack.
@@ -90,6 +107,8 @@ void DBGXRender(int *address,int showDisplay) {
 	GFXNumber(GRID(28,3),s->cpuPhase,16,1,GRIDSIZE,DBGC_DATA,-1);
 	GFXNumber(GRID(28,4),s->addressLamps,16,4,GRIDSIZE,DBGC_DATA,-1);
 	GFXNumber(GRID(28,5),s->dataLamps,16,2,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,6),DRVReadToggleSwitches(),16,2,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,7),DRVReadToggleSwitches(),8,3,GRIDSIZE,DBGC_DATA,-1);
 
 	//if (showCPU == 0) return;
 
@@ -116,34 +135,14 @@ void DBGXRender(int *address,int showDisplay) {
 	}
 
 	if (showDisplay == 0) return;
-	/*
-	int size = 3;
-	int spacing = 5;
-	SDL_Rect rc,rcc;
-	rc.w = 32 * 8 * size;rc.h = 8 * (9+spacing) * size;
-	rc.w += 2;rc.h += 2;
-	rc.x = (WIN_WIDTH - rc.w) / 2;
-	rc.y = (WIN_HEIGHT - 32 - rc.h);
-	GFXRectangle(&rc,0xFFF);
-	rc.w -= 2;rc.h -= 2;rc.x++;rc.y++;
-	GFXRectangle(&rc,0x000);
 
-	for (int x = 0;x < 32;x++) {
-		for (int y = 0;y < 8;y++) {
-			BYTE8 *fontData = _mcm6571font+(videoRAM[x + y * 32] & 0x7F)*9;
-			rcc.y = y * (9+spacing) * size + rc.y + spacing * size / 2;
-			for (int y1 = 0;y1 < 9;y1++) {
-				rcc.x = x * 8 * size + rc.x;
-				rcc.w = rcc.h = size;
-				BYTE8 pixels = *fontData++;
-				for (int x1 = 0;x1 < 8;x1++) {
-					if ((pixels & 0x80) != 0) GFXRectangle(&rcc,0xF80);
-					rcc.x += size;
-					pixels = pixels << 1;
-				}
-				rcc.y += size;
-			}
+	SDL_Rect rc,rc2;
+	rc.w = 20 * 8 * 4;rc.h = 4 * 10 * 4;
+	rc.x = (WIN_WIDTH-rc.w)/2;rc.y = WIN_HEIGHT-64-rc.h;
+	rc2 = rc;rc.x--;rc.y--;rc.w += 2;rc.h += 2;GFXRectangle(&rc,0xFFF);
+	GFXRectangle(&rc2,0x000);
+	for (int x = 0;x < 20;x++)
+		for (int y = 0;y < 4;y++) {
+			GFXCharacter(rc2.x+x*8*4,rc2.y+y*10*4+4,displayMemory[x+y*20],4,0xF80,-1);
 		}
-	}
-	*/
 }	

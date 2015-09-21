@@ -78,13 +78,13 @@ static BYTE8 interruptKey, stepKey, runKey;
 // *******************************************************************************************************************************
 
 static void _CPUFetch() {
-	if (interruptMode == 0) {
-		MA = PCTR;
+	if (interruptMode == 0) {														// No jam
+		MA = PCTR;																	// Fetch from PC
 		PCTR = (PCTR + 1) & 0x3FFF;
 		READ();
-	} else {
+	} else {																		// IJAM on.
 		MA = 0;
-		MB = DRVReadToggleSwitches();
+		MB = DRVReadToggleSwitches();												// Get the toggles to figure out what..
 		printf("JAM:%x\n",MB);
 	}
 }
@@ -130,6 +130,7 @@ void CPUReset(void) {
 	HaltFlag = Carry = Cycles = PCIndex = PSZValue = cpuPhase = status = 0;			// Clear flags & internals
 	interruptRequested = 0;interruptMode = 0;singleStepMode = 0;
 	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity.
+	DRVReset();																		// Reset drivers.
 }
 
 // *******************************************************************************************************************************
@@ -197,6 +198,9 @@ BYTE8 CPUExecuteSinglePhase(void) {
 	if (_CPUHasKeyBeenPressed(&runKey,DRVKEY_RUN)) {								// Run requested
 		singleStepMode = 0;
 	}
+	DRVRefreshPanel(addressLamps,dataLamps,status,									// Update Panel.
+							interruptMode,HaltFlag,singleStepMode == 0);			
+	DRVEndFrame();																	// Update hardware where required.
 	return FRAME_RATE;																// Return the frame rate for sync speed.
 }
 

@@ -117,12 +117,12 @@ void GFXXRender(SDL_Surface *surface) {
 		int frameRate = DEBUG_RUN(addressSettings[3],stepBreakPoint);				// Run a frame, or try to.
 		if (frameRate == 0) {														// Run code with step breakpoint, maybe.
 			inRunMode = 0;															// Break has occurred.
-			addressSettings[0] = DEBUG_HOMEPC();
 		} else {
 			while (SDL_GetTicks() < nextFrame) {};									// Wait for frame timer to elapse.
 			nextFrame = SDL_GetTicks() + 1000 / frameRate;							// And calculate the next sync time.
 
 		}
+		addressSettings[0] = DEBUG_HOMEPC();
 	}	
 }
 

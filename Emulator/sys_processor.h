@@ -30,6 +30,9 @@ WORD16 CPUGetStepOverBreakpoint(void);												// Get step over breakpoint
 BYTE8 CPUExecute(WORD16 break1,WORD16 break2);										// Run to break point(s)
 BYTE8 CPUExecuteInstruction(void);													// Execute one instruction (multi phases)
 
+BYTE8 DRVKeyMapper(BYTE8 key,BYTE8 inRunMode);
+void DBGXWriteDisplay(BYTE8 x,BYTE8 y,BYTE8 ch);									// Write to display screen.
+
 #ifdef INCLUDE_DEBUGGING_SUPPORT													// Only required for debugging
 
 typedef struct _CPUSTATUS {
