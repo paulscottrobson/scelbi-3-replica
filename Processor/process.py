@@ -4,8 +4,8 @@
 import re
 
 def process(txt,op):
-	tests = ["Carry == 0","PSZValue != 0","(PSZValue & 0x80) == 0","_CPUParity(PSZValue) == 0","Carry != 0","PSZValue == 0","(PSZValue & 0x80) != 0","_CPUParity(PSZValue) != 0"]
-	txt = txt.replace("$R","abcdehlm"[op & 7])
+	tests = ["Carry == 0","PSZValue != 0","(PSZValue & 0x80) == 0","_CPUParityEven(PSZValue) == 0","Carry != 0","PSZValue == 0","(PSZValue & 0x80) != 0","_CPUParityEven(PSZValue) != 0"]
+	txt = txt.replace("$R","ABCDEHLM"[op & 7])
 	txt = txt.replace("$H","{0:02x}".format((op & 7) * 8))
 	txt = txt.replace("$P","{0:02x}".format(op & 0x1F))
 	txt = txt.replace("$C",["nc","nz","p","po","c","z","m","pe"][op & 7])
@@ -54,9 +54,10 @@ for i in range(0,256):
 	if opcode[i] is not None:
 		current = opcode[i]
 		n = i / current["step"]
-		mnemonics[i] = process(current["mnemonic"],n)
+		mnemonics[i] = process(current["mnemonic"],n).lower()
 		handle.write("case 0x{0:02x}: /* {0:02x} {1} */\n".format(i,mnemonics[i]))
-		for phase in range(0,len(current["phases"])):
+		for p in range(0,len(current["phases"])):
+			phase = len(current["phases"]) - p - 1
 			dat = current["phases"][phase]
 			code = process(dat["code"],n)
 			code = code + "STATUS({0});DISPLAY({1},{2});".format(dat["status"],dat["addressLamps"],dat["dataLamps"])

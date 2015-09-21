@@ -38,6 +38,7 @@ typedef struct _CPUSTATUS {
 	int status,interruptMode,singleStepMode,cpuPhase;								// Internal stuff.
 	int cycles;																		// Elapsed cycles
 	int hl,m;																		// Helper stuff.
+	int addressLamps,dataLamps;														// The lamp displays.
 } CPUSTATUS;
 
 CPUSTATUS *CPUGetStatus(void);														// Access CPU State

@@ -1,35 +1,12 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/20/2015 15:48:54
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/21/2015 8:12:58
 
 
        1/       0 :                     	
        2/       0 :                     		cpu		8008new
        3/       0 :                     		org 	0
        4/       0 :                     
-       5/       0 : =EH                 vdu 	= 0eh
-       6/       0 :                     
-       7/       0 : 06 FF               		mvi 	a,377o
-       8/       2 :                     
-       9/       2 : 5D                  		out 	vdu
-      10/       3 : A8                  		xra 	a
-      11/       4 : 5D                  		out 	vdu
-      12/       5 : C8                  		mov 	b,a
-      13/       6 :                     loop
-      14/       6 : C1                  		mov 	a,b
-      15/       7 : 34 80               		ori 	200o
-      16/       9 : 5D                  		out 	vdu
-      17/       A : A8                  		xra 	a
-      18/       B : 5D                  		out 	vdu
-      19/       C : C1                  		mov 	a,b
-      20/       D : 34 80               		ori 	200o
-      21/       F : 5D                  		out 	vdu
-      22/      10 : A8                  		xra 	a
-      23/      11 : 5D                  		out 	vdu
-      24/      12 :                     skip:
-      25/      12 : 08                  		inr 	b
-      26/      13 : 50 06 00            		jp 		loop
-      27/      16 : 00                  		hlt
-      28/      17 :                     
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/20/2015 15:48:54
+       5/       0 : 44 3F 3F            		jmp 	03F3Fh
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/21/2015 8:12:58
 
 
   symbol table (* = unused):
@@ -37,25 +14,23 @@
 
 *ARCHITECTURE :  i386-unknown-win32 - | *BIGENDIAN :                      0 - |
 *BRANCHEXT :                      0 - | *CASESENSITIVE :                  0 - |
-*CONSTPI :        3.141592653589793 - | *DATE :                   9/20/2015 - |
+*CONSTPI :        3.141592653589793 - | *DATE :                   9/21/2015 - |
 *FALSE :                          0 - | *FULLPMMU :                       1 - |
 *HAS64 :                          1 - | *HASDSP :                         0 - |
 *HASFPU :                         0 - | *HASPMMU :                        0 - |
 *INEXTMODE :                      0 - | *INLWORDMODE :                    0 - |
 *INMAXMODE :                      0 - | *INSRCMODE :                      0 - |
 *INSUPMODE :                      0 - | *LISTON :                         1 - |
- LOOP :                           6 C | *MACEXP :                         1 - |
-*MOMCPU :                     8008E - | *MOMCPUNAME :               8008NEW - |
-*NESTMAX :                      100 - | *PACKING :                        0 - |
-*PADDING :                        1 - | *RELAXED :                        0 - |
-*SKIP :                          12 C | *TIME :                    15:48:54 - |
-*TRUE :                           1 - |  VDU :                            E - |
-*VERSION :                     142F - |
+*MACEXP :                         1 - | *MOMCPU :                     8008E - |
+*MOMCPUNAME :               8008NEW - | *NESTMAX :                      100 - |
+*PACKING :                        0 - | *PADDING :                        1 - |
+*RELAXED :                        0 - | *TIME :                     8:12:58 - |
+*TRUE :                           1 - | *VERSION :                     142F - |
 
-     31 symbols
-     29 unused symbols
+     28 symbols
+     28 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/20/2015 15:48:54
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/21/2015 8:12:58
 
 
   codepages:
@@ -66,7 +41,7 @@ STANDARD (0 changed characters)
 
 0.00 seconds assembly time
 
-     28 lines source file
+      5 lines source file
       1 pass
       0 errors
       0 warnings

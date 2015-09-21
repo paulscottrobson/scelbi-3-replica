@@ -51,7 +51,7 @@ void DBGXRender(int *address,int showDisplay) {
 		GFXString(GRID(15,n),labels[n],GRIDSIZE,DBGC_ADDRESS,-1);
 		n++;
 	}
-	char *labels2[] = { "ST","IM","SS","PH","","PC","SK",NULL };
+	char *labels2[] = { "ST","IM","SS","PH","AD","DA","","PC","SK",NULL };
 	n = 0;
 	while (labels2[n] != NULL) {
 		GFXString(GRID(25,n),labels2[n],GRIDSIZE,DBGC_ADDRESS,-1);
@@ -76,7 +76,7 @@ void DBGXRender(int *address,int showDisplay) {
 	DDC(s->cFlag);DDC(s->zFlag);DDC(s->sFlag);DDC(s->pFlag);DDC(s->hFlag);			// Draw the flags
 	DD(s->hl,4);DD(address[3],4);DD(s->cycles,4);									// The rest.
 
-	n = 5;																			// PCTR
+	n = 7;																			// PCTR
 	GFXNumber(GRID(28,n),s->pc,16,4,GRIDSIZE,DBGC_DATA,-1);
 	n++;
 	GFXString(GRID(28,n),"----",GRIDSIZE,DBGC_DATA,-1);								// Translated stack.
@@ -85,9 +85,11 @@ void DBGXRender(int *address,int showDisplay) {
 
 	GFXNumber(GRID(28,0),s->status >> 1,16,1,GRIDSIZE,DBGC_DATA,-1);
 	GFXNumber(GRID(30,0),s->status & 1,16,1,GRIDSIZE,DBGC_DATA,-1);
-	GFXNumber(GRID(28,1),s->interruptMode >> 1,16,1,GRIDSIZE,DBGC_DATA,-1);
-	GFXNumber(GRID(28,2),s->singleStepMode >> 1,16,1,GRIDSIZE,DBGC_DATA,-1);
-	GFXNumber(GRID(28,3),s->cpuPhase >> 1,16,1,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,1),s->interruptMode & 1,16,1,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,2),s->singleStepMode & 1,16,1,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,3),s->cpuPhase,16,1,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,4),s->addressLamps,16,4,GRIDSIZE,DBGC_DATA,-1);
+	GFXNumber(GRID(28,5),s->dataLamps,16,2,GRIDSIZE,DBGC_DATA,-1);
 
 	//if (showCPU == 0) return;
 
@@ -96,7 +98,7 @@ void DBGXRender(int *address,int showDisplay) {
 		int isPC = (n & 0x3FFF) == (s->pc);											// Check for breakpoint and being at PC
 		int isBrk = ((n & 0x3FFF) == address[3]);
 		GFXNumber(GRID(0,row),n & 0x3FFF,16,4,GRIDSIZE,isPC ? DBGC_HIGHLIGHT : DBGC_ADDRESS,isBrk ? 0xF00 : -1);
-		strcpy(buffer,_mnemonics[CPURead(n & 0x3FFF)]);							// Get mnemonic
+		strcpy(buffer,__mnemonics[CPURead(n & 0x3FFF)]);							// Get mnemonic
 		n++;
 		if (buffer[strlen(buffer)-2] == '@') {										// Replace @1 @2 with 1/2 byte operands
 			switch(buffer[strlen(buffer)-1]) {

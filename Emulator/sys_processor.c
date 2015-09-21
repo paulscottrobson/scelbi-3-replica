@@ -33,6 +33,9 @@ static WORD16 	PC[8],MA,Cycles;
 
 static WORD16 	temp16;																// Work register
 
+static WORD16 	addressLamps;														// What's on the lamps.
+static BYTE8 	dataLamps;
+
 // *******************************************************************************************************************************
 //														Main Memory
 // *******************************************************************************************************************************
@@ -53,6 +56,27 @@ static BYTE8 ramMemory[RAMSIZE];													// System RAM.
 #define READPORT() 	{}
 #define WRITEPORT()	{}
 
+#define FETCH()		_CPUFetch()
+#define CYCLES(n) 	Cycles += (n)
+#define PUSH() 		PCIndex = (PCIndex + 1) & 7
+#define PULL() 		PCIndex = (PCIndex - 1) & 7
+#define HL() 		((((WORD16)H) << 8) | L)
+#define STATUS(s) 	status = (s)
+#define DISPLAY(a,d) { addressLamps = (a);dataLamps = (d); }
+
+// *******************************************************************************************************************************
+//												Fetch an instruction byte
+// *******************************************************************************************************************************
+
+static void _CPUFetch() {
+	if (interruptMode == 0) {
+		MA = PCTR;
+		PCTR = (PCTR + 1) & 0x3FFF;
+		READ();
+	} else {
+		// TODO: Read MB from toggle switches
+	}
+}
 // *******************************************************************************************************************************
 //												Parity Checker (true if even)
 // *******************************************************************************************************************************
@@ -102,27 +126,47 @@ void CPUReset(void) {
 // *******************************************************************************************************************************
 
 BYTE8 CPUExecuteSinglePhase(void) {
-	// Only return frame out when in phase 0.
-	/*
-	if (HaltFlag == 0) {															// CPU is running (not halt)
-		FETCH();																	// Fetch and execute
-		switch(MB) {																// Do the selected opcode and phase.
-			//#include "__8008opcodes.h"
-		}
-	}	
-	if (interruptRequested != 0) {													// Interrupt requested
+
+	BYTE8 canExecute;																// true if we can clock a CPU cycle.
+
+	if (interruptRequested != 0 && cpuPhase == 0) {									// Interrupt requested at start of instruction.
 		interruptRequested = 0;														// We no longer have a request.
 		HaltFlag = 0;																// We are no longer halted.
-		PUSH();																		// Do a RST 0.
-		PCTR = 0;
-	}	 
-	if (HaltFlag == 0 && Cycles < CYCLES_PER_FRAME) return 0;						// Frame in progress, return 0.
-	if (HaltFlag != 0) Cycles = 0;													// Fix up for HALT.
-	Cycles -= CYCLES_PER_FRAME;														// Adjust cycle counter
-	HWIEndFrame();																	// Hardware stuff.
-	*/
+		interruptMode = 1;															// We are in interrupt mode (from toggles)
+		singleStepMode = 1;															// We are in single step mode.
+	}
+
+	canExecute = (HaltFlag == 0);													// Can execute command if Halt not set
+
+	if (singleStepMode != 0) {														// Single step mode ?
+		// TODO: If step key not pressed then don't execute this time.
+	}
+
+	if (canExecute != 0) {															// If we can run an instruction this time.
+		if (cpuPhase == 0) {														// Phase 0, fetch opcode.
+			FETCH();opcode = MB;													
+			cpuPhase = 1;															// Go to phase 1.
+			STATUS(0);DISPLAY(MA,MB);												// Display new instruction.
+		}
+		switch(opcode) {
+			#include "__8008opcodes.h"
+			default:
+				cpuPhase = 0;break;
+		}
+		if (cpuPhase == 0) interruptMode = 0;										// At end of instruction, int mode off.
+	}
+
+	if (canExecute == 0 && Cycles < CYCLES_PER_FRAME) return 0;						// Frame in progress, return 0.
+	if (HaltFlag != 0) {															// If halt flag set.
+		Cycles = 0;																	// Fix up for HALT.
+		Cycles -= CYCLES_PER_FRAME;													// Adjust cycle counter
+	}
+	// TODO: Check run
+	// TODO: Check interrupt
 	return FRAME_RATE;																// Return the frame rate for sync speed.
 }
+
+#ifdef INCLUDE_DEBUGGING_SUPPORT
 
 // *******************************************************************************************************************************
 //											Execute a single instruction
@@ -130,13 +174,12 @@ BYTE8 CPUExecuteSinglePhase(void) {
 
 BYTE8 CPUExecuteInstruction(void) {
 	BYTE8 frameRate;
+	singleStepMode = 0;interruptMode = 0;interruptRequested = 0;					// Just run normally, no SCELBI stuff
 	do {
 		frameRate = CPUExecuteSinglePhase();										// Execute a phase
 	} while (cpuPhase != 0);														// Until back at phase zero.
 	return frameRate;																// When we can exit.
 }
-
-#ifdef INCLUDE_DEBUGGING_SUPPORT
 
 // *******************************************************************************************************************************
 //										 Get the step over breakpoint value
@@ -206,6 +249,7 @@ CPUSTATUS *CPUGetStatus(void) {
 	s.hl = (s.h << 8) | s.l;s.m = CPURead(s.hl & 0x3FFF);							// Helpers
 	s.status = status;s.interruptMode = interruptMode;								// Internal statuses.
 	s.singleStepMode = singleStepMode;s.cpuPhase = cpuPhase;
+	s.addressLamps = addressLamps;s.dataLamps = dataLamps;							// Lamp displays.
 	return &s;
 }
 #endif
