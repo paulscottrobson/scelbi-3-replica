@@ -137,6 +137,7 @@ BYTE8 DRVReadToggleSwitches(void) {
 // *******************************************************************************************************************************
 
 void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode) {
+	DRVReadToggleSwitches();
 	_DRV20x4RefreshPanel(address,data,status,intMode,halt,runMode);
 }
 

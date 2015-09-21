@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/21/2015 13:04:50
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/21/2015 20:12:06
 
 
        1/       0 :                     	
@@ -12,7 +12,7 @@
        9/       8 : 20                  		inr 	e
       10/       9 : 44 00 00            		jmp 	0
       11/       C : 44 3F 3F            		jmp 	03F3Fh
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/21/2015 13:04:50
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/21/2015 20:12:06
 
 
   symbol table (* = unused):
@@ -30,13 +30,13 @@
 *MACEXP :                         1 - | *MOMCPU :                     8008E - |
 *MOMCPUNAME :               8008NEW - | *NESTMAX :                      100 - |
 *PACKING :                        0 - | *PADDING :                        1 - |
-*RELAXED :                        0 - | *TIME :                    13:04:50 - |
+*RELAXED :                        0 - | *TIME :                    20:12:06 - |
 *TRUE :                           1 - | *VERSION :                     142F - |
 
      28 symbols
      28 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/21/2015 13:04:50
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/21/2015 20:12:06
 
 
   codepages:
