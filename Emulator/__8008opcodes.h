@@ -254,7 +254,7 @@ case 0x40: /* 40 jnc @2 */
     break;
 
 case 0x41: /* 41 in 00 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT00();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x00;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -265,7 +265,7 @@ case 0x42: /* 42 cnc @2 */
     break;
 
 case 0x43: /* 43 in 01 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT01();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x01;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -276,7 +276,7 @@ case 0x44: /* 44 jmp @2 */
     break;
 
 case 0x45: /* 45 in 02 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT02();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x02;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -287,7 +287,7 @@ case 0x46: /* 46 call @2 */
     break;
 
 case 0x47: /* 47 in 03 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT03();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x03;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -298,7 +298,7 @@ case 0x48: /* 48 jnz @2 */
     break;
 
 case 0x49: /* 49 in 04 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT04();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x04;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -309,7 +309,7 @@ case 0x4a: /* 4a cnz @2 */
     break;
 
 case 0x4b: /* 4b in 05 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT05();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x05;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -320,7 +320,7 @@ case 0x4c: /* 4c jmp @2 */
     break;
 
 case 0x4d: /* 4d in 06 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT06();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x06;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -331,7 +331,7 @@ case 0x4e: /* 4e call @2 */
     break;
 
 case 0x4f: /* 4f in 07 */
-    if (cpuPhase == 2) { READPORT();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
+    if (cpuPhase == 2) { READPORT07();A = MB;STATUS(0);DISPLAY(PCTR,A);CYCLES(8);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x07;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -342,7 +342,7 @@ case 0x50: /* 50 jp @2 */
     break;
 
 case 0x51: /* 51 out 08 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT08();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x08;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -353,7 +353,7 @@ case 0x52: /* 52 cp @2 */
     break;
 
 case 0x53: /* 53 out 09 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT09();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x09;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -364,8 +364,8 @@ case 0x54: /* 54 jmp @2 */
     break;
 
 case 0x55: /* 55 out 0a */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x0a;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT0A();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x0A;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x56: /* 56 call @2 */
@@ -375,8 +375,8 @@ case 0x56: /* 56 call @2 */
     break;
 
 case 0x57: /* 57 out 0b */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x0b;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT0B();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x0B;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x58: /* 58 jpo @2 */
@@ -386,8 +386,8 @@ case 0x58: /* 58 jpo @2 */
     break;
 
 case 0x59: /* 59 out 0c */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x0c;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT0C();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x0C;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x5a: /* 5a cpo @2 */
@@ -397,8 +397,8 @@ case 0x5a: /* 5a cpo @2 */
     break;
 
 case 0x5b: /* 5b out 0d */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x0d;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT0D();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x0D;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x5c: /* 5c jmp @2 */
@@ -408,8 +408,8 @@ case 0x5c: /* 5c jmp @2 */
     break;
 
 case 0x5d: /* 5d out 0e */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x0e;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT0E();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x0E;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x5e: /* 5e call @2 */
@@ -419,8 +419,8 @@ case 0x5e: /* 5e call @2 */
     break;
 
 case 0x5f: /* 5f out 0f */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x0f;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT0F();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x0F;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x60: /* 60 jc @2 */
@@ -430,7 +430,7 @@ case 0x60: /* 60 jc @2 */
     break;
 
 case 0x61: /* 61 out 10 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT10();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x10;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -441,7 +441,7 @@ case 0x62: /* 62 cc @2 */
     break;
 
 case 0x63: /* 63 out 11 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT11();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x11;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -452,7 +452,7 @@ case 0x64: /* 64 jmp @2 */
     break;
 
 case 0x65: /* 65 out 12 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT12();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x12;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -463,7 +463,7 @@ case 0x66: /* 66 call @2 */
     break;
 
 case 0x67: /* 67 out 13 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT13();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x13;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -474,7 +474,7 @@ case 0x68: /* 68 jz @2 */
     break;
 
 case 0x69: /* 69 out 14 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT14();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x14;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -485,7 +485,7 @@ case 0x6a: /* 6a cz @2 */
     break;
 
 case 0x6b: /* 6b out 15 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT15();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x15;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -496,7 +496,7 @@ case 0x6c: /* 6c jmp @2 */
     break;
 
 case 0x6d: /* 6d out 16 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT16();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x16;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -507,7 +507,7 @@ case 0x6e: /* 6e call @2 */
     break;
 
 case 0x6f: /* 6f out 17 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT17();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x17;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -518,7 +518,7 @@ case 0x70: /* 70 jm @2 */
     break;
 
 case 0x71: /* 71 out 18 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT18();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x18;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -529,7 +529,7 @@ case 0x72: /* 72 cm @2 */
     break;
 
 case 0x73: /* 73 out 19 */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 2) { MB = A;WRITEPORT19();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
     if (cpuPhase == 1) { MA = 0x19;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
@@ -540,8 +540,8 @@ case 0x74: /* 74 jmp @2 */
     break;
 
 case 0x75: /* 75 out 1a */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x1a;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT1A();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x1A;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x76: /* 76 call @2 */
@@ -551,8 +551,8 @@ case 0x76: /* 76 call @2 */
     break;
 
 case 0x77: /* 77 out 1b */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x1b;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT1B();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x1B;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x78: /* 78 jpe @2 */
@@ -562,8 +562,8 @@ case 0x78: /* 78 jpe @2 */
     break;
 
 case 0x79: /* 79 out 1c */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x1c;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT1C();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x1C;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x7a: /* 7a cpe @2 */
@@ -573,8 +573,8 @@ case 0x7a: /* 7a cpe @2 */
     break;
 
 case 0x7b: /* 7b out 1d */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x1d;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT1D();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x1D;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x7c: /* 7c jmp @2 */
@@ -584,8 +584,8 @@ case 0x7c: /* 7c jmp @2 */
     break;
 
 case 0x7d: /* 7d out 1e */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x1e;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT1E();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x1E;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x7e: /* 7e call @2 */
@@ -595,8 +595,8 @@ case 0x7e: /* 7e call @2 */
     break;
 
 case 0x7f: /* 7f out 1f */
-    if (cpuPhase == 2) { MB = A;WRITEPORT();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
-    if (cpuPhase == 1) { MA = 0x1f;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
+    if (cpuPhase == 2) { MB = A;WRITEPORT1F();STATUS(0);DISPLAY(PCTR,A);CYCLES(6);cpuPhase = (0); }
+    if (cpuPhase == 1) { MA = 0x1F;STATUS(1);DISPLAY((MA << 8)|A,opcode);cpuPhase = 2; }
     break;
 
 case 0x80: /* 80 add a */

@@ -1,3 +1,3 @@
 @echo off
 python process.py
-copy /Y __*.? ..\Emulator
+copy /Y __*.? ..\emulator

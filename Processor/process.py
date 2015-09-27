@@ -7,7 +7,7 @@ def process(txt,op):
 	tests = ["Carry == 0","PSZValue != 0","(PSZValue & 0x80) == 0","_CPUParityEven(PSZValue) == 0","Carry != 0","PSZValue == 0","(PSZValue & 0x80) != 0","_CPUParityEven(PSZValue) != 0"]
 	txt = txt.replace("$R","ABCDEHLM"[op & 7])
 	txt = txt.replace("$H","{0:02x}".format((op & 7) * 8))
-	txt = txt.replace("$P","{0:02x}".format(op & 0x1F))
+	txt = txt.replace("$P","{0:02X}".format(op & 0x1F))
 	txt = txt.replace("$C",["nc","nz","p","po","c","z","m","pe"][op & 7])
 	txt = txt.replace("$T",tests[op & 7])
 	return txt
@@ -71,5 +71,11 @@ for i in range(0,256):
 		handle.write("    break;\n\n")
 handle.close()
 
-m = ",".join('"'+x+'"' for x in mnemonics)
+m = ",".join('"'+x.lower()+'"' for x in mnemonics)
 open("__8008mnemonics.h","w").write("static const char *__mnemonics[] = { "+m+"};\n")
+
+h = open("__8008ports.h","w")
+for p in range(0,32):
+	cmd = "READPORT" if p < 8 else "WRITEPORT"
+	cmd = "{0}{1:02X}".format(cmd,p)
+	h.write("#ifndef {0}\n#define {0}()\n#endif\n".format(cmd))
