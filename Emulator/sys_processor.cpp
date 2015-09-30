@@ -61,6 +61,11 @@ static BYTE8 interruptKey, stepKey, runKey;
 //													Port connections
 // *******************************************************************************************************************************
 
+static BYTE8 lowDisplayByte;
+
+#define WRITEPORT0E() 	lowDisplayByte = MB 										// Write to display ports.
+#define WRITEPORT0F() 	{ DRVWriteScope((((WORD16)MB) << 8)|lowDisplayByte);isScopeDisplayInUse = 1; }
+
 #include "__8008ports.h"															// Do the rest of the ports
 
 // *******************************************************************************************************************************

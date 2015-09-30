@@ -20,6 +20,7 @@ BYTE8 DRVIsPushButtonPressed(BYTE8 button);
 BYTE8 DRVReadToggleSwitches(void);
 void DRVReset(void);
 void DRVEndFrame(void);
+void DRVWriteScope(WORD16 latches);
 void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
 
 #define APIN_INTERRUPT 		(12)
