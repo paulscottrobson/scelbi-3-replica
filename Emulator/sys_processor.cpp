@@ -228,6 +228,7 @@ BYTE8 CPUExecuteInstruction(void) {
 	BYTE8 frameRate;
 	while (1) {
 		frameRate = CPUExecuteSinglePhase();										// Execute a phase
+		if (cpuPhase == 0) return frameRate;
 		if (frameRate != 0) return frameRate;
 	}
 	return frameRate;																// When we can exit.

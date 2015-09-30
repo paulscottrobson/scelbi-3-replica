@@ -15,7 +15,9 @@
 static void _DRV20x4Initialise(void);
 static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
 
-static BYTE8 toggles = 0;
+static BYTE8 	toggles = 0;														// Position on toggle switches.
+static BYTE8 	xPos,yPos; 															// Position in screen display.
+static WORD16 	displayCache[20*4];													// Cached values so no unneeded rewrites.
 
 
 // *******************************************************************************************************************************
@@ -27,6 +29,7 @@ static BYTE8 toggles = 0;
 #ifdef WINDOWS
 
 #include "gfx.h"
+#include "sys_debug_system.h"
 #define WRITEDISPLAY(x,y,c) DBGXWriteDisplay(x,y,c)
 
 // *******************************************************************************************************************************
@@ -62,6 +65,14 @@ BYTE8 DRVKeyMapper(BYTE8 key,BYTE8 inRunMode) {
 
 void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode) {
 	_DRV20x4RefreshPanel(address,data,status,intMode,halt,runMode);
+}
+
+// *******************************************************************************************************************************
+//													Update the display memory
+// *******************************************************************************************************************************
+
+void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {	
+	DBGXWriteScopeCharacter(x,y,latches);
 }
 
 // *******************************************************************************************************************************
@@ -173,11 +184,6 @@ void DRVEndFrame(void) {
 
 #endif
 
-#include <stdio.h>
-void DRVWriteScope(WORD16 latches) {
-	printf("Written %x\n",latches);
-}
-
 // *******************************************************************************************************************************
 //												Generalised 20 x 4 Display Driver
 // *******************************************************************************************************************************
@@ -222,3 +228,27 @@ static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 in
 	WRITEDISPLAY(1,0,((toggles >> 3) & 7) | '0');
 	WRITEDISPLAY(2,0,(toggles & 7) | '0');
 }
+
+// *******************************************************************************************************************************
+//													Write to LCD Latches
+// *******************************************************************************************************************************
+
+void DRVWriteScope(WORD16 latches) {
+	if ((latches & 0x8000) == 0) { 													// B7 is low, home cursor.
+		xPos = yPos = 0;
+	} else { 																		// B7 high.
+		if (latches == 0xD555) {													// was pattern 5555 (plus bit 7) written.
+			xPos = 0;yPos++;														// This is 'new line'.
+		} else {
+			if (xPos < 16 && yPos < 4) {											// Legal coordinates.
+				if (displayCache[xPos+yPos*16] != latches) {						// Has value written there changed ?
+					displayCache[xPos+yPos*16] = latches; 							// Update the cache.
+					DRVWriteScopeCharacter(xPos,yPos,latches);						// Update the display.
+				}
+			}
+			xPos++;																	// Advance position.
+		}
+	}
+}
+
+

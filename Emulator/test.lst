@@ -1,18 +1,47 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/21/2015 20:12:06
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/30/2015 12:55:49
 
 
        1/       0 :                     	
        2/       0 :                     		cpu		8008new
        3/       0 :                     		org 	0
        4/       0 :                     
-       5/       0 : 30                  		inr 	l
-       6/       1 : 48 00 00            		jnz 	0
-       7/       4 : 28                  		inr 	h
-       8/       5 : 48 00 00            		jnz 	0
-       9/       8 : 20                  		inr 	e
-      10/       9 : 44 00 00            		jmp 	0
-      11/       C : 44 3F 3F            		jmp 	03F3Fh
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/21/2015 20:12:06
+       5/       0 : =EH                 lowScope = 14
+       6/       0 : =FH                 highScope = 15
+       7/       0 :                     
+       8/       0 :                     
+       9/       0 : A8                  Start:	xra 	a
+      10/       1 : 5D                  		out 	lowScope
+      11/       2 : 5F                  		out		HighScope
+      12/       3 :                     
+      13/       3 : 16 04               		mvi 	c,4
+      14/       5 :                     LineLoop:
+      15/       5 : 2E 00               		mvi 	h,0
+      16/       7 : 36 01               		mvi 	l,1
+      17/       9 : 1E 10               		mvi 	d,16
+      18/       B :                     CharLoop:
+      19/       B : C6                  		mov 	a,l
+      20/       C : 5D                  		out 	LowScope
+      21/       D : C5                  		mov 	a,h
+      22/       E : 34 80               		ori 	080h
+      23/      10 : 5F                  		out 	HighScope
+      24/      11 : C6                  		mov 	a,l
+      25/      12 : 80                  		add 	a
+      26/      13 : F0                  		mov 	l,a
+      27/      14 : C5                  		mov 	a,h
+      28/      15 : 88                  		adc 	a
+      29/      16 : E8                  		mov 	h,a
+      30/      17 : 30                  		inr 	l
+      31/      18 : 19                  		dcr 	d
+      32/      19 : 48 0B 00            		jnz 	CharLoop
+      33/      1C : 06 55               		mvi 	a,55h
+      34/      1E : 5D                  		out 	lowScope
+      35/      1F : 06 D5               		mvi 	a,0D5h
+      36/      21 : 5F                  		out 	HighScope
+      37/      22 : 11                  		dcr 	c
+      38/      23 : 48 05 00            		jnz 	LineLoop
+      39/      26 : 44 26 00            Wait:	jmp 	Wait
+      40/      29 :                     
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/30/2015 12:55:49
 
 
   symbol table (* = unused):
@@ -20,23 +49,26 @@
 
 *ARCHITECTURE :  i386-unknown-win32 - | *BIGENDIAN :                      0 - |
 *BRANCHEXT :                      0 - | *CASESENSITIVE :                  0 - |
-*CONSTPI :        3.141592653589793 - | *DATE :                   9/21/2015 - |
-*FALSE :                          0 - | *FULLPMMU :                       1 - |
-*HAS64 :                          1 - | *HASDSP :                         0 - |
-*HASFPU :                         0 - | *HASPMMU :                        0 - |
+ CHARLOOP :                       B C | *CONSTPI :        3.141592653589793 - |
+*DATE :                   9/30/2015 - | *FALSE :                          0 - |
+*FULLPMMU :                       1 - | *HAS64 :                          1 - |
+*HASDSP :                         0 - | *HASFPU :                         0 - |
+*HASPMMU :                        0 - |  HIGHSCOPE :                      F - |
 *INEXTMODE :                      0 - | *INLWORDMODE :                    0 - |
 *INMAXMODE :                      0 - | *INSRCMODE :                      0 - |
-*INSUPMODE :                      0 - | *LISTON :                         1 - |
+*INSUPMODE :                      0 - |  LINELOOP :                       5 C |
+*LISTON :                         1 - |  LOWSCOPE :                       E - |
 *MACEXP :                         1 - | *MOMCPU :                     8008E - |
 *MOMCPUNAME :               8008NEW - | *NESTMAX :                      100 - |
 *PACKING :                        0 - | *PADDING :                        1 - |
-*RELAXED :                        0 - | *TIME :                    20:12:06 - |
-*TRUE :                           1 - | *VERSION :                     142F - |
+*RELAXED :                        0 - | *START :                          0 C |
+*TIME :                    12:55:49 - | *TRUE :                           1 - |
+*VERSION :                     142F - |  WAIT :                          26 C |
 
-     28 symbols
-     28 unused symbols
+     34 symbols
+     29 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/21/2015 20:12:06
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/30/2015 12:55:49
 
 
   codepages:
@@ -45,9 +77,9 @@
 STANDARD (0 changed characters)
 
 
-0.00 seconds assembly time
+0.01 seconds assembly time
 
-     11 lines source file
+     40 lines source file
       1 pass
       0 errors
       0 warnings

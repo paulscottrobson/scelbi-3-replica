@@ -32,7 +32,9 @@
 #define DEBUG_RESET() 		CPUReset()												// Reset the CPU / Hardware.
 #define DEBUG_HOMEPC()		(CPUGetStatus()->pc) 									// Get PC Home Address (e.g. current PCTR value)
 
-#define DEBUG_SINGLESTEP()	CPUExecuteSinglePhase()									// Execute a single instruction, return 0 or Frame rate on frame end.
+//#define DEBUG_SINGLESTEP()	CPUExecuteSinglePhase()									// Execute a single instruction, return 0 or Frame rate on frame end.
+#define DEBUG_SINGLESTEP() 	CPUExecuteInstruction()
+
 #define DEBUG_RUN(b1,b2) 	CPUExecute(b1,b2) 										// Run a frame or to breakpoint, returns -1 if breakpoint
 #define DEBUG_GETOVERBREAK() CPUGetStepOverBreakpoint()								// Where would we break to step over here. (0 == single step)
 
@@ -42,5 +44,6 @@
 #define DEBUG_KEYMAP(k,r) 	DRVKeyMapper(k,r)										// Runtime can remap/process keys etc.
 
 void DBGXRender(int *address,int show);												// Render the debugger screen.
+void DBGXWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches);						// Write to scope screen.
 
 #endif

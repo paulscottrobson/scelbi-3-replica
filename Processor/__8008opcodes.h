@@ -248,8 +248,8 @@ case 0x3f: /* 3f rpe */
     break;
 
 case 0x40: /* 40 jnc @2 */
-    if (cpuPhase == 3) { FETCH2();if (Carry == 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (Carry == 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -259,7 +259,7 @@ case 0x41: /* 41 in 00 */
     break;
 
 case 0x42: /* 42 cnc @2 */
-    if (cpuPhase == 3) { FETCH2();if (Carry == 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (Carry == 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -270,7 +270,7 @@ case 0x43: /* 43 in 01 */
     break;
 
 case 0x44: /* 44 jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -281,7 +281,7 @@ case 0x45: /* 45 in 02 */
     break;
 
 case 0x46: /* 46 call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -292,8 +292,8 @@ case 0x47: /* 47 in 03 */
     break;
 
 case 0x48: /* 48 jnz @2 */
-    if (cpuPhase == 3) { FETCH2();if (PSZValue != 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (PSZValue != 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -303,7 +303,7 @@ case 0x49: /* 49 in 04 */
     break;
 
 case 0x4a: /* 4a cnz @2 */
-    if (cpuPhase == 3) { FETCH2();if (PSZValue != 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (PSZValue != 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -314,7 +314,7 @@ case 0x4b: /* 4b in 05 */
     break;
 
 case 0x4c: /* 4c jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -325,7 +325,7 @@ case 0x4d: /* 4d in 06 */
     break;
 
 case 0x4e: /* 4e call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -336,8 +336,8 @@ case 0x4f: /* 4f in 07 */
     break;
 
 case 0x50: /* 50 jp @2 */
-    if (cpuPhase == 3) { FETCH2();if ((PSZValue & 0x80) == 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if ((PSZValue & 0x80) == 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -347,7 +347,7 @@ case 0x51: /* 51 out 08 */
     break;
 
 case 0x52: /* 52 cp @2 */
-    if (cpuPhase == 3) { FETCH2();if ((PSZValue & 0x80) == 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if ((PSZValue & 0x80) == 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -358,7 +358,7 @@ case 0x53: /* 53 out 09 */
     break;
 
 case 0x54: /* 54 jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -369,7 +369,7 @@ case 0x55: /* 55 out 0a */
     break;
 
 case 0x56: /* 56 call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -380,8 +380,8 @@ case 0x57: /* 57 out 0b */
     break;
 
 case 0x58: /* 58 jpo @2 */
-    if (cpuPhase == 3) { FETCH2();if (_CPUParityEven(PSZValue) == 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (_CPUParityEven(PSZValue) == 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -391,7 +391,7 @@ case 0x59: /* 59 out 0c */
     break;
 
 case 0x5a: /* 5a cpo @2 */
-    if (cpuPhase == 3) { FETCH2();if (_CPUParityEven(PSZValue) == 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (_CPUParityEven(PSZValue) == 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -402,7 +402,7 @@ case 0x5b: /* 5b out 0d */
     break;
 
 case 0x5c: /* 5c jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -413,7 +413,7 @@ case 0x5d: /* 5d out 0e */
     break;
 
 case 0x5e: /* 5e call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -424,8 +424,8 @@ case 0x5f: /* 5f out 0f */
     break;
 
 case 0x60: /* 60 jc @2 */
-    if (cpuPhase == 3) { FETCH2();if (Carry != 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (Carry != 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -435,7 +435,7 @@ case 0x61: /* 61 out 10 */
     break;
 
 case 0x62: /* 62 cc @2 */
-    if (cpuPhase == 3) { FETCH2();if (Carry != 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (Carry != 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -446,7 +446,7 @@ case 0x63: /* 63 out 11 */
     break;
 
 case 0x64: /* 64 jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -457,7 +457,7 @@ case 0x65: /* 65 out 12 */
     break;
 
 case 0x66: /* 66 call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -468,8 +468,8 @@ case 0x67: /* 67 out 13 */
     break;
 
 case 0x68: /* 68 jz @2 */
-    if (cpuPhase == 3) { FETCH2();if (PSZValue == 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (PSZValue == 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -479,7 +479,7 @@ case 0x69: /* 69 out 14 */
     break;
 
 case 0x6a: /* 6a cz @2 */
-    if (cpuPhase == 3) { FETCH2();if (PSZValue == 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (PSZValue == 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -490,7 +490,7 @@ case 0x6b: /* 6b out 15 */
     break;
 
 case 0x6c: /* 6c jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -501,7 +501,7 @@ case 0x6d: /* 6d out 16 */
     break;
 
 case 0x6e: /* 6e call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -512,8 +512,8 @@ case 0x6f: /* 6f out 17 */
     break;
 
 case 0x70: /* 70 jm @2 */
-    if (cpuPhase == 3) { FETCH2();if ((PSZValue & 0x80) != 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if ((PSZValue & 0x80) != 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -523,7 +523,7 @@ case 0x71: /* 71 out 18 */
     break;
 
 case 0x72: /* 72 cm @2 */
-    if (cpuPhase == 3) { FETCH2();if ((PSZValue & 0x80) != 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if ((PSZValue & 0x80) != 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -534,7 +534,7 @@ case 0x73: /* 73 out 19 */
     break;
 
 case 0x74: /* 74 jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -545,7 +545,7 @@ case 0x75: /* 75 out 1a */
     break;
 
 case 0x76: /* 76 call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -556,8 +556,8 @@ case 0x77: /* 77 out 1b */
     break;
 
 case 0x78: /* 78 jpe @2 */
-    if (cpuPhase == 3) { FETCH2();if (_CPUParityEven(PSZValue) != 0) { PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
-    if (cpuPhase == 2) { FETCH();MA = temp16;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (_CPUParityEven(PSZValue) != 0) { PCTR = temp16;};STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
 
@@ -567,7 +567,7 @@ case 0x79: /* 79 out 1c */
     break;
 
 case 0x7a: /* 7a cpe @2 */
-    if (cpuPhase == 3) { FETCH2();if (_CPUParityEven(PSZValue) != 0) { PUSH();PCTR = temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;if (_CPUParityEven(PSZValue) != 0) { PUSH();PCTR=temp16; };STATUS(0);DISPLAY(PCTR,MB);CYCLES(10);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -578,7 +578,7 @@ case 0x7b: /* 7b out 1d */
     break;
 
 case 0x7c: /* 7c jmp @2 */
-    if (cpuPhase == 3) { FETCH2();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
@@ -589,7 +589,7 @@ case 0x7d: /* 7d out 1e */
     break;
 
 case 0x7e: /* 7e call @2 */
-    if (cpuPhase == 3) { FETCH2();PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
+    if (cpuPhase == 3) { FETCH();temp16 |= (MB & 0x3F) << 8;PUSH();PCTR = temp16;STATUS(0);DISPLAY(temp16,MB);CYCLES(11);cpuPhase = (0); }
     if (cpuPhase == 2) { FETCH();temp16 = MB;;STATUS(2);DISPLAY(PCTR,MB);cpuPhase = 3; }
     if (cpuPhase == 1) { ;;STATUS(2);DISPLAY(PCTR,opcode);cpuPhase = 2; }
     break;
