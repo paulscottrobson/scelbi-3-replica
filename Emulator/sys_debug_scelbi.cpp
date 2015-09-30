@@ -29,6 +29,9 @@ static BYTE8 displayMemory[20*4];													// Video Memory
 static WORD16 scopeMemory[16*4];													// Scope memory.
 static BYTE8 isScopeEnabled; 														// Non zero if scope display.
 
+static void _DBGXDrawStarburst(SDL_Rect *rc,WORD16 pattern);
+static void _DBGXDiagonal(int x1,int y1,int x2,int y2,int w);
+
 // *******************************************************************************************************************************
 //												Reset the 8008
 // *******************************************************************************************************************************
@@ -157,13 +160,68 @@ void DBGXRender(int *address,int showDisplay) {
 		for (int y = 0;y < 4;y++) {
 			rc.x = rc2.x + (x+2) * 8 * 4;
 			rc.y = rc2.y + y * 10 * 4;
-			rc.w = 8 * 4-2;
-			rc.h = 10 * 4-2;
+			rc.w = 8 * 4;
+			rc.h = 10 * 4;
 			if (isScopeEnabled) {
-				GFXRectangle(&rc,0xF80);
+				_DBGXDrawStarburst(&rc,scopeMemory[x+y*16]);
 			} else {
 				GFXCharacter(rc.x,rc.y,displayMemory[x+y*20],4,0x0F0,-1);
 			}
 		}
 	}
 }	
+
+// *******************************************************************************************************************************
+//													Draw starburst
+// *******************************************************************************************************************************
+
+#define BDRAW(xo,yo,m) { rBar.x = r.x+xo;rBar.y = r.y+yo; if ((pattern & m) != 0) GFXRectangle(&rBar,0xF80); }
+
+static void _DBGXDrawStarburst(SDL_Rect *rc,WORD16 pattern) {
+	SDL_Rect r = *rc;
+	SDL_Rect rBar;
+	int w = rc->h/16;
+	if (w < 1) w = 1;
+	int b = rc->h/8;
+	r.x += b;r.y += b;r.h -= b * 2;r.w -= b*2;
+
+	// Half height vertical
+	rBar.w = w;rBar.h = r.h/2;
+	BDRAW(0,r.h/2,0x0001);															// A0
+	BDRAW(0,0,0x0002);																// A1
+	BDRAW(r.w,0,0x0008);															// A3
+	BDRAW(r.w,r.h/2,0x0010);														// A4
+	// Full height vertical
+	rBar.h = r.h;BDRAW(r.w/2,0,0x0400);												// B2
+	// Full width horizontal
+	rBar.w = r.w;rBar.h = w;
+	BDRAW(0,0,0x0004);																// A2
+	// Half width horizontal
+	rBar.w = r.w/2;
+	BDRAW(r.w/2,r.h,0x0020);														// A5
+	BDRAW(0,r.h,0x0040);															// A6
+	BDRAW(0,r.h/2,0x2000);															// B5
+	BDRAW(r.w/2,r.h/2,0x4000);														// B6
+	// Full stop
+	rBar.h = w;rBar.w = w;
+	BDRAW(r.w/2,r.h/2,0x0100);														// B0
+	// Diagonals.
+	if ((pattern & 0x0080) != 0) _DBGXDiagonal(r.x+r.w/2,r.y+r.h/2,r.x,r.y+r.h,w);	// A7
+	if ((pattern & 0x0200) != 0) _DBGXDiagonal(r.x+r.w/2,r.y+r.h/2,r.x+r.w,r.y,w);	// B1
+	if ((pattern & 0x0800) != 0) _DBGXDiagonal(r.x+r.w/2,r.y+r.h/2,r.x+r.w,r.y+r.h,w);// B3
+	if ((pattern & 0x1000) != 0) _DBGXDiagonal(r.x+r.w/2,r.y+r.h/2,r.x,r.y,w);		// B4
+}
+
+// *******************************************************************************************************************************
+//													Draw diagonal line
+// *******************************************************************************************************************************
+
+static void _DBGXDiagonal(int x1,int y1,int x2,int y2,int w) {
+	int s = abs(x1-x2)+abs(y1-y2);
+	SDL_Rect rc;rc.w = rc.h = w;
+	for (int i = 0;i <= s;i++) {
+		rc.x = (x2 - x1) * i / s + x1;
+		rc.y = (y2 - y1) * i / s + y1;
+		GFXRectangle(&rc,0xF80);
+	}
+}

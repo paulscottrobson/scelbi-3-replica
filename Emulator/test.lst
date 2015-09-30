@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/30/2015 12:55:49
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/30/2015 14:37:33
 
 
        1/       0 :                     	
@@ -41,7 +41,7 @@
       38/      23 : 48 05 00            		jnz 	LineLoop
       39/      26 : 44 26 00            Wait:	jmp 	Wait
       40/      29 :                     
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/30/2015 12:55:49
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/30/2015 14:37:33
 
 
   symbol table (* = unused):
@@ -62,13 +62,13 @@
 *MOMCPUNAME :               8008NEW - | *NESTMAX :                      100 - |
 *PACKING :                        0 - | *PADDING :                        1 - |
 *RELAXED :                        0 - | *START :                          0 C |
-*TIME :                    12:55:49 - | *TRUE :                           1 - |
+*TIME :                    14:37:33 - | *TRUE :                           1 - |
 *VERSION :                     142F - |  WAIT :                          26 C |
 
      34 symbols
      29 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/30/2015 12:55:49
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/30/2015 14:37:33
 
 
   codepages:
@@ -77,7 +77,7 @@
 STANDARD (0 changed characters)
 
 
-0.01 seconds assembly time
+0.00 seconds assembly time
 
      40 lines source file
       1 pass
