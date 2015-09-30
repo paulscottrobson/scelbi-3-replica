@@ -36,6 +36,7 @@ static WORD16 	temp16;																// Work register
 
 static WORD16 	addressLamps;														// What's on the lamps.
 static BYTE8 	dataLamps;
+static BYTE8 	isScopeDisplayInUse; 												// Non-zero when scope display on.
 
 // *******************************************************************************************************************************
 //														Main Memory
@@ -132,7 +133,8 @@ void CPUReset(void) {
 	A = B= C = D = E = H = L = 0;													// Clear registers
 	HaltFlag = Carry = Cycles = PCIndex = PSZValue = cpuPhase = status = 0;			// Clear flags & internals
 	interruptRequested = 0;interruptMode = 0;singleStepMode = 0;
-	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity.
+	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity
+	isScopeDisplayInUse = 0;														// Scope display not in use.
 	DRVReset();																		// Reset drivers.
 }
 
@@ -185,7 +187,7 @@ BYTE8 CPUExecuteSinglePhase(void) {
 		}
 		if (cpuPhase == 0) {														// At end of instruction
 			interruptMode = 0;														// Interrupt mode off
-			//singleStepMode = 0;														// Step mode off.
+			//singleStepMode = 0;													// Step mode off.
 		}
 	}
 
@@ -201,8 +203,12 @@ BYTE8 CPUExecuteSinglePhase(void) {
 	if (_CPUHasKeyBeenPressed(&runKey,DRVKEY_RUN)) {								// Run requested
 		singleStepMode = 0;
 	}
-	DRVRefreshPanel(addressLamps,dataLamps,status,									// Update Panel.
-							interruptMode,HaltFlag,singleStepMode == 0);			
+	if (isScopeDisplayInUse) {														// Have we enabled the scope display ?
+
+	} else {
+		DRVRefreshPanel(addressLamps,dataLamps,status,								// Update Panel.
+								interruptMode,HaltFlag,singleStepMode == 0);			
+	}
 	DRVEndFrame();																	// Update hardware where required.
 	return FRAME_RATE;																// Return the frame rate for sync speed.
 }
