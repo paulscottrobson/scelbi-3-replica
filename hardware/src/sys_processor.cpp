@@ -36,6 +36,7 @@ static WORD16 	temp16;																// Work register
 
 static WORD16 	addressLamps;														// What's on the lamps.
 static BYTE8 	dataLamps;
+static BYTE8 	isScopeDisplayInUse; 												// Non-zero when scope display on.
 
 // *******************************************************************************************************************************
 //														Main Memory
@@ -59,6 +60,11 @@ static BYTE8 interruptKey, stepKey, runKey;
 // *******************************************************************************************************************************
 //													Port connections
 // *******************************************************************************************************************************
+
+static BYTE8 lowDisplayByte;
+
+#define WRITEPORT0E() 	lowDisplayByte = MB 										// Write to display ports.
+#define WRITEPORT0F() 	{ DRVWriteScope((((WORD16)MB) << 8)|lowDisplayByte);isScopeDisplayInUse = 1; }
 
 #include "__8008ports.h"															// Do the rest of the ports
 
@@ -125,6 +131,19 @@ static inline BYTE8 _CPUSubtract(BYTE8 n) {
 }
 
 // *******************************************************************************************************************************
+//													  Load Binary Data
+// *******************************************************************************************************************************
+
+static const BYTE8 __binary[] = {
+	#include "__binary.h"
+};
+
+static void _CPULoadBinary(void) {
+	for (WORD16 w = 0;w < sizeof(__binary);w++) {
+		ramMemory[w] = __binary[w];
+	}
+}
+// *******************************************************************************************************************************
 //														Reset the CPU
 // *******************************************************************************************************************************
 
@@ -132,8 +151,10 @@ void CPUReset(void) {
 	A = B= C = D = E = H = L = 0;													// Clear registers
 	HaltFlag = Carry = Cycles = PCIndex = PSZValue = cpuPhase = status = 0;			// Clear flags & internals
 	interruptRequested = 0;interruptMode = 0;singleStepMode = 0;
-	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity.
+	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity
+	isScopeDisplayInUse = 0;														// Scope display not in use.
 	DRVReset();																		// Reset drivers.
+	_CPULoadBinary();																// Load binary image.
 }
 
 // *******************************************************************************************************************************
@@ -185,7 +206,7 @@ BYTE8 CPUExecuteSinglePhase(void) {
 		}
 		if (cpuPhase == 0) {														// At end of instruction
 			interruptMode = 0;														// Interrupt mode off
-			//singleStepMode = 0;														// Step mode off.
+			//singleStepMode = 0;													// Step mode off.
 		}
 	}
 
@@ -201,8 +222,12 @@ BYTE8 CPUExecuteSinglePhase(void) {
 	if (_CPUHasKeyBeenPressed(&runKey,DRVKEY_RUN)) {								// Run requested
 		singleStepMode = 0;
 	}
-	DRVRefreshPanel(addressLamps,dataLamps,status,									// Update Panel.
-							interruptMode,HaltFlag,singleStepMode == 0);			
+	if (isScopeDisplayInUse) {														// Have we enabled the scope display ?
+
+	} else {
+		DRVRefreshPanel(addressLamps,dataLamps,status,								// Update Panel.
+								interruptMode,HaltFlag,singleStepMode == 0);			
+	}
 	DRVEndFrame();																	// Update hardware where required.
 	return FRAME_RATE;																// Return the frame rate for sync speed.
 }
@@ -217,6 +242,7 @@ BYTE8 CPUExecuteInstruction(void) {
 	BYTE8 frameRate;
 	while (1) {
 		frameRate = CPUExecuteSinglePhase();										// Execute a phase
+		if (cpuPhase == 0) return frameRate;
 		if (frameRate != 0) return frameRate;
 	}
 	return frameRate;																// When we can exit.

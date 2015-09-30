@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/30/2015 15:23:36
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/30/2015 16:09:42
 
 
        1/       0 :                     	
@@ -61,7 +61,7 @@
 (1)   22/      4C : 7B 80                       dw 32891
 (1)   23/      4E : 83 82                       dw 33411
 (1)   24/      50 : 9B 88                       dw 34971
- AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 2 - 9/30/2015 15:23:36
+ AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 2 - 9/30/2015 16:09:42
 
 
 (1)   25/      52 : 80 9A                       dw 39552
@@ -104,7 +104,7 @@
 (1)   62/      9C : 60 E0                       dw 57440
 (1)   63/      9E : 80 90                       dw 36992
 (1)   64/      A0 : 0D E0                       dw 57357
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/30/2015 15:23:36
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/30/2015 16:09:42
 
 
   symbol table (* = unused):
@@ -125,14 +125,14 @@
 *MOMCPU :                     8008E - | *MOMCPUNAME :               8008NEW - |
 *NESTMAX :                      100 - | *PACKING :                        0 - |
 *PADDING :                        1 - | *RELAXED :                        0 - |
-*START :                          0 C | *TIME :                    15:23:36 - |
+*START :                          0 C | *TIME :                    16:09:42 - |
 *TRUE :                           1 - | *VERSION :                     142F - |
  WAIT :                          1F C |
 
      35 symbols
      29 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 4 - 9/30/2015 15:23:36
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 4 - 9/30/2015 16:09:42
 
 
   codepages:

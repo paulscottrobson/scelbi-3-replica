@@ -14,4 +14,4 @@
  .pioenvs\megaatmega2560\LiquidCrystal_I2C/LiquidCrystal_I2C.h \
  .pioenvs\megaatmega2560\FrameworkArduino/Print.h \
  .pioenvs\megaatmega2560\Wire/Wire.h \
- .pioenvs\megaatmega2560\FrameworkArduino/Stream.h
+ .pioenvs\megaatmega2560\FrameworkArduino/Stream.h src\__starburst.h

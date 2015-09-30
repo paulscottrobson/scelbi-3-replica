@@ -109,6 +109,7 @@ void DRVEndFrame(void) {
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x3F,20,4);
+static BYTE8 isScopeCleared = 0;
 
 #define WRITEDISPLAY(x,y,c) DRVAWriteLCD(x,y,c)
 
@@ -157,13 +158,16 @@ void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 
 //														Reset the hardware
 // *******************************************************************************************************************************
 
+#define DRVBURST_CHAR (3)
 #define DRVOFF_CHAR	(2)
 #define DRVON_CHAR	(1)
 
 uint8_t onChar[8] = { 0x0E,0x1F,0x1F,0x1F,0x1F,0x1F,0x0E,0x00 };
 uint8_t offChar[8] = { 0x0E,0x11,0x11,0x11,0x11,0x11,0x0E,0x00 };
+uint8_t failChar[8] = { 0x1F,0x15,0x15,0x1F,0x15,0x15,0x1F,0x00 };
 
 void DRVReset(void) {
+	//Serial.begin(9600);
 	for (BYTE8 i = 0;i < 8;i++) pinMode(togglePins[i],INPUT_PULLUP);
 	pinMode(APIN_STEP,INPUT_PULLUP);
 	pinMode(APIN_INTERRUPT,INPUT_PULLUP);
@@ -172,7 +176,24 @@ void DRVReset(void) {
  	lcd.backlight();
  	lcd.createChar(DRVON_CHAR,onChar);
  	lcd.createChar(DRVOFF_CHAR,offChar);
+ 	lcd.createChar(DRVBURST_CHAR,failChar);
 	_DRV20x4Initialise();
+	isScopeCleared = 0;
+}
+
+
+// *******************************************************************************************************************************
+//													Update the display memory
+// *******************************************************************************************************************************
+
+void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {	
+	if (isScopeCleared == 0) {														// Switched to scope, clear display
+		isScopeCleared = 1;
+		lcd.clear();
+	}
+	BYTE8 ascii = DRVGetASCIICharacter(latches);									// What char is it ?
+	if (ascii == 0) ascii = DRVBURST_CHAR;											// Unknown, show the box char
+	WRITEDISPLAY(x+2,y,ascii);														// Write to LCD screen.
 }
 
 // *******************************************************************************************************************************
@@ -251,4 +272,17 @@ void DRVWriteScope(WORD16 latches) {
 	}
 }
 
+// *******************************************************************************************************************************
+//											Convert starburst font back to ASCII
+// *******************************************************************************************************************************
 
+static const WORD16 __starburstFont[] = {
+	#include "__starburst.h"
+};
+
+BYTE8 DRVGetASCIICharacter(WORD16 pattern) {
+	for (BYTE8 ch = 32;ch < 96;ch++) {
+		if (__starburstFont[ch & 63] == pattern) return ch;
+	}
+	return 0;
+}

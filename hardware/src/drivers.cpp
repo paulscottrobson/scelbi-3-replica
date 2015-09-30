@@ -15,7 +15,10 @@
 static void _DRV20x4Initialise(void);
 static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
 
-static BYTE8 toggles = 0;
+static BYTE8 	toggles = 0;														// Position on toggle switches.
+static BYTE8 	xPos,yPos; 															// Position in screen display.
+static WORD16 	displayCache[20*4];													// Cached values so no unneeded rewrites.
+
 
 // *******************************************************************************************************************************
 // *******************************************************************************************************************************
@@ -26,6 +29,7 @@ static BYTE8 toggles = 0;
 #ifdef WINDOWS
 
 #include "gfx.h"
+#include "sys_debug_system.h"
 #define WRITEDISPLAY(x,y,c) DBGXWriteDisplay(x,y,c)
 
 // *******************************************************************************************************************************
@@ -64,6 +68,14 @@ void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 
 }
 
 // *******************************************************************************************************************************
+//													Update the display memory
+// *******************************************************************************************************************************
+
+void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {	
+	DBGXWriteScopeCharacter(x,y,latches);
+}
+
+// *******************************************************************************************************************************
 //														Reset the hardware
 // *******************************************************************************************************************************
 
@@ -97,6 +109,7 @@ void DRVEndFrame(void) {
 #include <LiquidCrystal_I2C.h>
 
 LiquidCrystal_I2C lcd(0x3F,20,4);
+static BYTE8 isScopeCleared = 0;
 
 #define WRITEDISPLAY(x,y,c) DRVAWriteLCD(x,y,c)
 
@@ -145,13 +158,16 @@ void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 
 //														Reset the hardware
 // *******************************************************************************************************************************
 
+#define DRVBURST_CHAR (3)
 #define DRVOFF_CHAR	(2)
 #define DRVON_CHAR	(1)
 
 uint8_t onChar[8] = { 0x0E,0x1F,0x1F,0x1F,0x1F,0x1F,0x0E,0x00 };
 uint8_t offChar[8] = { 0x0E,0x11,0x11,0x11,0x11,0x11,0x0E,0x00 };
+uint8_t failChar[8] = { 0x1F,0x15,0x15,0x1F,0x15,0x15,0x1F,0x00 };
 
 void DRVReset(void) {
+	//Serial.begin(9600);
 	for (BYTE8 i = 0;i < 8;i++) pinMode(togglePins[i],INPUT_PULLUP);
 	pinMode(APIN_STEP,INPUT_PULLUP);
 	pinMode(APIN_INTERRUPT,INPUT_PULLUP);
@@ -160,7 +176,24 @@ void DRVReset(void) {
  	lcd.backlight();
  	lcd.createChar(DRVON_CHAR,onChar);
  	lcd.createChar(DRVOFF_CHAR,offChar);
+ 	lcd.createChar(DRVBURST_CHAR,failChar);
 	_DRV20x4Initialise();
+	isScopeCleared = 0;
+}
+
+
+// *******************************************************************************************************************************
+//													Update the display memory
+// *******************************************************************************************************************************
+
+void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {	
+	if (isScopeCleared == 0) {														// Switched to scope, clear display
+		isScopeCleared = 1;
+		lcd.clear();
+	}
+	BYTE8 ascii = DRVGetASCIICharacter(latches);									// What char is it ?
+	if (ascii == 0) ascii = DRVBURST_CHAR;											// Unknown, show the box char
+	WRITEDISPLAY(x+2,y,ascii);														// Write to LCD screen.
 }
 
 // *******************************************************************************************************************************
@@ -215,4 +248,41 @@ static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 in
 	WRITEDISPLAY(0,0,(toggles >> 6) | '0');
 	WRITEDISPLAY(1,0,((toggles >> 3) & 7) | '0');
 	WRITEDISPLAY(2,0,(toggles & 7) | '0');
+}
+
+// *******************************************************************************************************************************
+//													Write to LCD Latches
+// *******************************************************************************************************************************
+
+void DRVWriteScope(WORD16 latches) {
+	if ((latches & 0x8000) == 0) { 													// B7 is low, home cursor.
+		xPos = yPos = 0;
+	} else { 																		// B7 high.
+		if (latches == 0xD555) {													// was pattern 5555 (plus bit 7) written.
+			xPos = 0;yPos++;														// This is 'new line'.
+		} else {
+			if (xPos < 16 && yPos < 4) {											// Legal coordinates.
+				if (displayCache[xPos+yPos*16] != latches) {						// Has value written there changed ?
+					displayCache[xPos+yPos*16] = latches; 							// Update the cache.
+					DRVWriteScopeCharacter(xPos,yPos,latches);						// Update the display.
+				}
+			}
+			xPos++;																	// Advance position.
+		}
+	}
+}
+
+// *******************************************************************************************************************************
+//											Convert starburst font back to ASCII
+// *******************************************************************************************************************************
+
+static const WORD16 __starburstFont[] = {
+	#include "__starburst.h"
+};
+
+BYTE8 DRVGetASCIICharacter(WORD16 pattern) {
+	for (BYTE8 ch = 32;ch < 96;ch++) {
+		if (__starburstFont[ch & 63] == pattern) return ch;
+	}
+	return 0;
 }
