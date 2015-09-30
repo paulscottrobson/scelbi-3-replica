@@ -17,7 +17,13 @@ void setup()
   	CPUReset();
 }
 
+unsigned long nextFrameTime = 0;
+
 void loop()
 {
-	CPUExecuteSinglePhase();
+    unsigned long frameRate = CPUExecuteSinglePhase();
+    if (frameRate != 0) {
+		while (millis() < nextFrameTime) {}
+		nextFrameTime = nextFrameTime + 1000 / frameRate;
+	}
 }
