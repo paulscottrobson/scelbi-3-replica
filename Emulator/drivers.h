@@ -22,6 +22,7 @@ void DRVReset(void);
 void DRVEndFrame(void);
 void DRVWriteScope(WORD16 latches);
 void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
+void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches);
 
 #define APIN_INTERRUPT 		(12)
 #define APIN_STEP			(11)

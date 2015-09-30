@@ -11,22 +11,17 @@ Start:	xra 	a
 		out		HighScope
 
 		mvi 	c,4
+		mvi 	h,Font/256
+		mvi 	l,Font&255
 LineLoop:
-		mvi 	h,0
-		mvi 	l,1
+
 		mvi 	d,16
 CharLoop:
-		mov 	a,l
+		mov 	a,m
 		out 	LowScope
-		mov 	a,h
-		ori 	080h
+		inr 	l
+		mov 	a,m
 		out 	HighScope
-		mov 	a,l
-		add 	a
-		mov 	l,a
-		mov 	a,h
-		adc 	a
-		mov 	h,a
 		inr 	l
 		dcr 	d
 		jnz 	CharLoop
@@ -37,3 +32,5 @@ CharLoop:
 		dcr 	c
 		jnz 	LineLoop
 Wait:	jmp 	Wait
+
+Font:	include __starburst.inc
