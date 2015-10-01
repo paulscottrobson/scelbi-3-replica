@@ -154,7 +154,7 @@ void CPUReset(void) {
 	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity
 	isScopeDisplayInUse = 0;														// Scope display not in use.
 	DRVReset();																		// Reset drivers.
-	_CPULoadBinary();																// Load binary image.
+	//_CPULoadBinary();																// Load binary image.
 }
 
 // *******************************************************************************************************************************
