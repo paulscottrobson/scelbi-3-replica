@@ -15,6 +15,7 @@
 static void _DRVResetPanelDisplay(void);
 static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
 
+static BYTE8    keyboardLatch;														// The keyboard latch.
 static BYTE8 	toggles = 0;														// Position on toggle switches.
 static BYTE8 	xPos,yPos; 															// Position in screen display.
 static WORD16 	displayCache[20*4];													// Cached values so no unneeded rewrites.
@@ -29,6 +30,8 @@ static WORD16 	displayCache[20*4];													// Cached values so no unneeded r
 
 #include "gfx.h"
 #include "sys_debug_system.h"
+#include <stdio.h>
+
 #define WRITEDISPLAY(x,y,c) DBGXWriteDisplay(x,y,c)
 
 // *******************************************************************************************************************************
@@ -60,6 +63,8 @@ BYTE8 DRVKeyMapper(BYTE8 key,BYTE8 inRunMode) {
 	if (inRunMode != 0 && key >= '0' && key <= '7') {
 		toggles = (toggles << 3) | (key & 7);
 	}
+	int aKey = GFXToASCII(key,1);
+	if (aKey > 0 && aKey < 127) keyboardLatch = aKey | 0x80;
 	return key;
 }
 
@@ -308,4 +313,16 @@ BYTE8 DRVGetASCIICharacter(WORD16 pattern) {
 		if (__starburstFont[ch & 63] == pattern) return ch;
 	}
 	return 0;
+}
+
+// *******************************************************************************************************************************
+//													Handle Keyboard Latch
+// *******************************************************************************************************************************
+
+void DRVClearKeyboardLatch(void) {
+	keyboardLatch = 0;
+}
+
+BYTE8 DRVReadKeyboardLatch(void) {
+	return keyboardLatch;
 }

@@ -2,22 +2,25 @@
 		cpu		8008new
 		org 	0
 
-		mov 	a,a
-		mvi 	h,34h
-		mvi 	l,67h
+		mvi 	l,0
 Start:	call	RepaintScreen
-		mvi 	h,ScreenMap/256
-		mvi 	l,(ScreenMap+7) & 255
-Increment:
-		mov 	a,m
-		adi 	1
-		mov 	m,a
-		cpi 	'9'+1
-		jnz 	Start
-		mvi 	m,'0'
-		dcr 	l
-		jmp 	Increment
 
+Wait:	in 		2
+		ora 	a
+		jp 		Wait
+		out 	9
+		ani	 	7Fh
+		cpi 	60h
+		jc 		NotLC
+		sui 	20h
+NotLC:
+		mvi 	h,ScreenMap/256
+		mov 	m,a
+		inr 	l
+		mov 	a,l
+		ani 	63
+		mov 	l,a
+		jmp 	Start
 
 ; ********************************************************************************************************************************
 ; ********************************************************************************************************************************

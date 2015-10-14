@@ -25,6 +25,8 @@ void DRVRefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 
 void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches);
 BYTE8 DRVGetASCIICharacter(WORD16 pattern);
 void DRVSwitchLEDPanel(void);
+void DRVClearKeyboardLatch(void);
+BYTE8 DRVReadKeyboardLatch(void);
 
 #define APIN_INTERRUPT 		(12)
 #define APIN_STEP			(11)
