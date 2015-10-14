@@ -19,7 +19,6 @@ static BYTE8 	toggles = 0;														// Position on toggle switches.
 static BYTE8 	xPos,yPos; 															// Position in screen display.
 static WORD16 	displayCache[20*4];													// Cached values so no unneeded rewrites.
 
-
 // *******************************************************************************************************************************
 // *******************************************************************************************************************************
 //														WINDOWS
@@ -100,6 +99,7 @@ void DRVReset(void) {
 void DRVSwitchLEDPanel(void) {
 	_DRVResetPanelDisplay();
 	DBGXSetLEDDisplay();
+	for (BYTE8 i = 0;i < 20*4;i++) displayCache[i] = 0x00;
 }
 
 // *******************************************************************************************************************************
