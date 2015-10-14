@@ -228,7 +228,7 @@ void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {
 	}
 	BYTE8 ascii = DRVGetASCIICharacter(latches);									// What char is it ?
 	if (ascii == 0) ascii = DRVBURST_CHAR;											// Unknown, show the box char
-	WRITEDISPLAY(x+2,y,ascii);														// Write to LCD screen.
+	WRITEDISPLAY(x,y,ascii);														// Write to LCD screen.
 }
 
 // *******************************************************************************************************************************
@@ -299,9 +299,9 @@ void DRVWriteScope(WORD16 latches) {
 		if (latches == 0xD555) {													// was pattern 5555 (plus bit 7) written.
 			xPos = 0;yPos++;														// This is 'new line'.
 		} else {
-			if (xPos < 16 && yPos < 4) {											// Legal coordinates.
-				if (displayCache[xPos+yPos*16] != latches) {						// Has value written there changed ?
-					displayCache[xPos+yPos*16] = latches; 							// Update the cache.
+			if (xPos < 20 && yPos < 4) {											// Legal coordinates.
+				if (displayCache[xPos+yPos*20] != latches) {						// Has value written there changed ?
+					displayCache[xPos+yPos*20] = latches; 							// Update the cache.
 					DRVWriteScopeCharacter(xPos,yPos,latches);						// Update the display.
 				}
 			}

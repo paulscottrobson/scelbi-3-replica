@@ -1,205 +1,223 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 10/14/2015 19:29:03
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 10/14/2015 20:08:53
 
 
        1/       0 :                     	
        2/       0 :                     		cpu		8008new
        3/       0 :                     		org 	0
-       4/       0 :                     
-       5/       0 : 36 00               		mvi 	l,0
-       6/       2 : 46 42 01            Start:	call	RepaintScreen
-       7/       5 :                     
-       8/       5 : 45                  Wait:	in 		2
-       9/       6 : B0                  		ora 	a
-      10/       7 : 50 05 00            		jp 		Wait
-      11/       A : 53                  		out 	9
-      12/       B : 24 7F               		ani	 	7Fh
-      13/       D : 3C 60               		cpi 	60h
-      14/       F : 60 14 00            		jc 		NotLC
-      15/      12 : 14 20               		sui 	20h
-      16/      14 :                     NotLC:
-      17/      14 : 2E 01               		mvi 	h,ScreenMap/256
-      18/      16 : F8                  		mov 	m,a
-      19/      17 : 30                  		inr 	l
-      20/      18 : C6                  		mov 	a,l
-      21/      19 : 24 3F               		ani 	63
-      22/      1B : F0                  		mov 	l,a
-      23/      1C : 44 02 00            		jmp 	Start
-      24/      1F :                     
-      25/      1F :                     ; ********************************************************************************************************************************
-      26/      1F :                     ; ********************************************************************************************************************************
-      27/      1F :                     ;
-      28/      1F :                     ;		This 256 byte block contains the screen refresh code, the memory for the screen and the code to repaint it to the
-      29/      1F :                     ;		Scope display.
-      30/      1F :                     ;
-      31/      1F :                     ; ********************************************************************************************************************************
-      32/      1F :                     ; ********************************************************************************************************************************
-      33/      1F :                     
-      34/      1F :                     		align 	256
-      35/     100 :                     
-      36/     100 :                     ; ********************************************************************************************************************************
-      37/     100 :                     ;
-      38/     100 :                     ;							This routine is ROMmable but the ScreenMap and _RSRestore must be in RAM.
-      39/     100 :                     ;
-      40/     100 :                     ; ********************************************************************************************************************************
-      41/     100 :                     
-      42/     100 :                     ScreenMap: 														; this can move, but must be on a 16 byte boundary.
-      43/     100 : 30 30 30 30 30 30   		db 		"00000000 COUNTER" 								; if _RSLineCount is increased beyond 4, this driver will not fit
+       4/       0 : 0E 42               		mvi 	b,42h
+       5/       2 : 16 55               		mvi 	c,55h
+       6/       4 : 2E 37               		mvi 	h,37h
+       7/       6 : 36 29               		mvi 	l,ScreenMap & 255
+       8/       8 : 46 FE 00            Start:	call	RepaintScreen
+       9/       B :                     
+      10/       B : 49                  Wait:	in 		4
+      11/       C : B0                  		ora 	a
+      12/       D : 50 0B 00            		jp 		Wait
+      13/      10 : 55                  		out 	10
+      14/      11 : 24 7F               		ani	 	7Fh
+      15/      13 : 3C 60               		cpi 	60h
+      16/      15 : 60 1A 00            		jc 		NotLC
+      17/      18 : 14 20               		sui 	20h
+      18/      1A :                     NotLC:
+      19/      1A : 2E 00               		mvi 	h,ScreenMap/256
+      20/      1C : F8                  		mov 	m,a
+      21/      1D : 30                  		inr 	l
+      22/      1E : C6                  		mov 	a,l
+      23/      1F : 3C 50               		cpi 	80
+      24/      21 : 48 08 00            		jnz 	Start
+      25/      24 : 36 00               		mvi 	l,0
+      26/      26 : 44 08 00            		jmp 	Start
+      27/      29 :                     
+      28/      29 :                     ; ********************************************************************************************************************************
+      29/      29 :                     ;
+      30/      29 :                     ;											RAM Storage : A 20 x 4 Display Area.
+      31/      29 :                     ;
+      32/      29 :                     ; ********************************************************************************************************************************
+      33/      29 :                     
+      34/      29 :                     ScreenMap: 														; this can move
+      35/      29 : 30 30 30 30 30 30   		db 		"00000000 COUNTERABCD" 						
                     30 30 20 43 4F 55 
-                    4E 54 45 52 
-      44/     110 : 48 45 4C 4C 4F 20   		db 		"HELLO WORLD     "								; in 1/4 k of RAM.
+                    4E 54 45 52 41 42 
+                    43 44 
+      36/      3D : 48 45 4C 4C 4F 20   		db 		"HELLO WORLD     EFGH"						
                     57 4F 52 4C 44 20 
-                    20 20 20 20 
-      45/     120 : 2A 2A 2A 20 20 4C   		db 		"***  LINE 3  ***"
+                    20 20 20 20 45 46 
+                    47 48 
+      37/      51 : 2A 2A 2A 20 20 4C   		db 		"***  LINE 3  ***IJKL"
                     49 4E 45 20 33 20 
-                    20 2A 2A 2A 
-      46/     130 : 45 4E 44 20 4F 46   		db 		"END OF PAGE     "
+                    20 2A 2A 2A 49 4A 
+                    4B 4C 
+      38/      65 : 45 4E 44 20 4F 46   		db 		"END OF PAGE     MNOP"
                     20 50 41 47 45 20 
-                    20 20 20 20 
-      47/     140 :                     
-      48/     140 :                     _RSRestore:														; HL is saved here.
-      49/     140 : 00 00               		dw 		0
-      50/     142 :                     
-      51/     142 : =4H                 _RSLineCount = 4 												; number of display lines, note if more than 4 the ScreenMap must move.
-      52/     142 : =EH                 _RSLowScopePort = 0Eh 											; output port low
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 10/14/2015 19:29:03
+                    20 20 20 20 4D 4E 
+                    4F 50 
+      39/      79 :                     
+      40/      79 :                     _RSStorage:
+      41/      79 : 00 00 00 00         		db 		0,0,0,0 										; storage for A,C,L,H
+      42/      7D :                     
+      43/      7D : =4H                 _RSLineCount = 4 												; number of display lines, note if more than 4 the ScreenMap must move.
+      44/      7D : =8H                 _RSLowScopePort = 08h 											; output port low
+      45/      7D : =9H                 _RSHighScopePort = 09h											; output port high and start
+      46/      7D : =55H                _RSNewLineCommand = 55h 										; code for new line.
+      47/      7D :                     
+      48/      7D :                     ; ********************************************************************************************************************************
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 10/14/2015 20:08:53
 
 
-      53/     142 : =FH                 _RSHighScopePort = 0Fh											; output port high and start
-      54/     142 : =55H                _RSNewLineCommand = 55h 										; code for new line.
-      55/     142 :                     
-      56/     142 :                     ; ********************************************************************************************************************************
-      57/     142 :                     ;
-      58/     142 :                     ;												Repaint the screen. Breaks AE.
-      59/     142 :                     ;
-      60/     142 :                     ; ********************************************************************************************************************************
-      61/     142 :                     
-      62/     142 :                     RepaintScreen:
-      63/     142 : E6                  		mov 	e,l 											; save HL to AE
-      64/     143 : C5                  		mov		a,h
-      65/     144 : 2E 01               		mvi 	h,_RSRestore/256 								; point HL to the HL store.
-      66/     146 : 36 40               		mvi 	l,_RSRestore & 255 	
-      67/     148 : FC                  		mov 	m,e 											; save L (in E) then H (in A) there
-      68/     149 : 30                  		inr 	l
-      69/     14A : F8                  		mov 	m,a
-      70/     14B : A8                  		xra 	a 												; write $00 to the scope, which sets B7, homes the cursor
-      71/     14C : 5D                  		out 	_RSLowScopePort 	
-      72/     14D : 5F                  		out		_RSHighScopePort
-      73/     14E :                     
-      74/     14E : 26 00               		mvi 	e,ScreenMap&255 								; this is where we are drawing from.
-      75/     150 :                     _RSRenderLoop:
-      76/     150 : 2E 01               		mvi 	h,ScreenMap/256 								; point HL to screen map
-      77/     152 : F4                  		mov 	l,e 
-      78/     153 : C7                  		mov 	a,m 											; read character
-      79/     154 : 24 3F               		ani 	03Fh											; 6 bit ASCII
-      80/     156 : 80                  		add 	a 												; double
-      81/     157 : 04 80               		adi 	_RSFont & 255 									; point HL to font data
-      82/     159 : F0                  		mov 	l,a
-      83/     15A : 2E 01               		mvi 	h,_RSFont/256
-      84/     15C : C7                  		mov 	a,m 											; output data.
-      85/     15D : 5D                  		out 	_RSLowScopePort
-      86/     15E : 30                  		inr 	l
-      87/     15F : C7                  		mov 	a,m
-      88/     160 : 5F                  		out 	_RSHighScopePort
-      89/     161 : 20                  		inr 	e 												; next address
-      90/     162 : C4                  		mov 	a,e 											; reached EOL e.g. xxxx0000
-      91/     163 : 24 0F               		ani 	0Fh
-      92/     165 : 48 50 01            		jnz 	_RSRenderLoop
-      93/     168 : 06 55               		mvi 	a,_RSNewLineCommand								; output $5555 with bit 15 set, for a new line.
-      94/     16A : 5D                  		out 	_RSLowScopePort
-      95/     16B : 06 D5               		mvi 	a,_RSNewLineCommand!80h
-      96/     16D : 5F                  		out 	_RSHighScopePort
-      97/     16E : C4                  		mov 	a,e
-      98/     16F : 2C 40               		xri 	(ScreenMap&255)+(_RSLineCount*16) 				; reached the end of the map.
-      99/     171 : 48 50 01            		jnz 	_RSRenderLoop
-     100/     174 :                     
-     101/     174 : 2E 01               		mvi 	h,_RSRestore/256 								; point HL to the HL store.
-     102/     176 : 36 40               		mvi 	l,_RSRestore & 255 	
-     103/     178 : C7                  		mov 	a,m
-     104/     179 : 30                  		inr 	l
-     105/     17A : EF                  		mov 	h,m
-     106/     17B : F0                  		mov 	l,a
-     107/     17C : 07                  		ret
-     108/     17D :                     
-     109/     17D :                     		align 	128
-     110/     180 :                     ; ********************************************************************************************************************************
-     111/     180 :                     ;
-     112/     180 :                     ;										64 x 2 byte font entries, one for each character
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 10/14/2015 19:29:03
+      49/      7D :                     ;
+      50/      7D :                     ;										64 x 2 byte font entries, one for each character
+      51/      7D :                     ;
+      52/      7D :                     ; ********************************************************************************************************************************
+      53/      7D :                     
+      54/      7D :                     		align 	2
+      55/      7E :                     _RSFont:	
+      56/      7E :                     		include __starburst.inc
+(1)    1/      7E : FF 9A                       dw 39679
+(1)    2/      80 : 1F E0                       dw 57375
+(1)    3/      82 : 7C E4                       dw 58492
+(1)    4/      84 : 67 80                       dw 32871
+(1)    5/      86 : 7C 84                       dw 33916
+(1)    6/      88 : 67 A0                       dw 41063
+(1)    7/      8A : 07 E0                       dw 57351
+(1)    8/      8C : 77 C0                       dw 49271
+(1)    9/      8E : 1B E0                       dw 57371
+(1)   10/      90 : 64 84                       dw 33892
+(1)   11/      92 : 79 80                       dw 32889
+(1)   12/      94 : 03 AA                       dw 43523
+(1)   13/      96 : 63 80                       dw 32867
+(1)   14/      98 : 1B 92                       dw 37403
+(1)   15/      9A : 1B 98                       dw 38939
+(1)   16/      9C : 7F 80                       dw 32895
+(1)   17/      9E : 0F E0                       dw 57359
+(1)   18/      A0 : 7F 88                       dw 34943
+(1)   19/      A2 : 0F E8                       dw 59407
+(1)   20/      A4 : 74 D0                       dw 53364
+(1)   21/      A6 : 04 84                       dw 33796
+(1)   22/      A8 : 7B 80                       dw 32891
+(1)   23/      AA : 83 82                       dw 33411
+(1)   24/      AC : 9B 88                       dw 34971
+(1)   25/      AE : 80 9A                       dw 39552
+(1)   26/      B0 : 18 D0                       dw 53272
+(1)   27/      B2 : E4 82                       dw 33508
+(1)   28/      B4 : 61 E0                       dw 57441
+(1)   29/      B6 : 00 98                       dw 38912
+(1)   30/      B8 : 70 E0                       dw 57456
+(1)   31/      BA : 0E 80                       dw 32782
+(1)   32/      BC : 60 80                       dw 32864
+(1)   33/      BE : 00 80                       dw 32768
+(1)   34/      C0 : 00 84                       dw 33792
+(1)   35/      C2 : 0A 80                       dw 32778
+(1)   36/      C4 : 78 E4                       dw 58488
+(1)   37/      C6 : 76 E4                       dw 58486
+(1)   38/      C8 : 92 82                       dw 33426
+(1)   39/      CA : 65 BA                       dw 47717
+(1)   40/      CC : 08 80                       dw 32776
+(1)   41/      CE : 67 8A                       dw 35431
+(1)   42/      D0 : FC 90                       dw 37116
+(1)   43/      D2 : 80 9E                       dw 40576
+(1)   44/      D4 : 00 E4                       dw 58368
+(1)   45/      D6 : 80 80                       dw 32896
+(1)   46/      D8 : 00 E0                       dw 57344
+(1)   47/      DA : 00 81                       dw 33024
+(1)   48/      DC : 80 82                       dw 33408
+(1)   49/      DE : FF 82                       dw 33535
+(1)   50/      E0 : 18 82                       dw 33304
+(1)   51/      E2 : 6D E0                       dw 57453
+(1)   52/      E4 : 7C C0                       dw 49276
+ AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 3 - 10/14/2015 20:08:53
 
 
-     113/     180 :                     ;
-     114/     180 :                     ; ********************************************************************************************************************************
-     115/     180 :                     
-     116/     180 :                     _RSFont:	
-     117/     180 :                     		include __starburst.inc
-(1)    1/     180 : FF 9A                       dw 39679
-(1)    2/     182 : 1F E0                       dw 57375
-(1)    3/     184 : 7C E4                       dw 58492
-(1)    4/     186 : 67 80                       dw 32871
-(1)    5/     188 : 7C 84                       dw 33916
-(1)    6/     18A : 67 A0                       dw 41063
-(1)    7/     18C : 07 E0                       dw 57351
-(1)    8/     18E : 77 C0                       dw 49271
-(1)    9/     190 : 1B E0                       dw 57371
-(1)   10/     192 : 64 84                       dw 33892
-(1)   11/     194 : 79 80                       dw 32889
-(1)   12/     196 : 03 AA                       dw 43523
-(1)   13/     198 : 63 80                       dw 32867
-(1)   14/     19A : 1B 92                       dw 37403
-(1)   15/     19C : 1B 98                       dw 38939
-(1)   16/     19E : 7F 80                       dw 32895
-(1)   17/     1A0 : 0F E0                       dw 57359
-(1)   18/     1A2 : 7F 88                       dw 34943
-(1)   19/     1A4 : 0F E8                       dw 59407
-(1)   20/     1A6 : 74 D0                       dw 53364
-(1)   21/     1A8 : 04 84                       dw 33796
-(1)   22/     1AA : 7B 80                       dw 32891
-(1)   23/     1AC : 83 82                       dw 33411
-(1)   24/     1AE : 9B 88                       dw 34971
-(1)   25/     1B0 : 80 9A                       dw 39552
-(1)   26/     1B2 : 18 D0                       dw 53272
-(1)   27/     1B4 : E4 82                       dw 33508
-(1)   28/     1B6 : 61 E0                       dw 57441
-(1)   29/     1B8 : 00 98                       dw 38912
-(1)   30/     1BA : 70 E0                       dw 57456
-(1)   31/     1BC : 0E 80                       dw 32782
-(1)   32/     1BE : 60 80                       dw 32864
-(1)   33/     1C0 : 00 80                       dw 32768
-(1)   34/     1C2 : 00 84                       dw 33792
-(1)   35/     1C4 : 0A 80                       dw 32778
-(1)   36/     1C6 : 78 E4                       dw 58488
-(1)   37/     1C8 : 76 E4                       dw 58486
-(1)   38/     1CA : 92 82                       dw 33426
-(1)   39/     1CC : 65 BA                       dw 47717
-(1)   40/     1CE : 08 80                       dw 32776
-(1)   41/     1D0 : 67 8A                       dw 35431
-(1)   42/     1D2 : FC 90                       dw 37116
-(1)   43/     1D4 : 80 9E                       dw 40576
-(1)   44/     1D6 : 00 E4                       dw 58368
-(1)   45/     1D8 : 80 80                       dw 32896
-(1)   46/     1DA : 00 E0                       dw 57344
-(1)   47/     1DC : 00 81                       dw 33024
-(1)   48/     1DE : 80 82                       dw 33408
-(1)   49/     1E0 : FF 82                       dw 33535
-(1)   50/     1E2 : 18 82                       dw 33304
-(1)   51/     1E4 : 6D E0                       dw 57453
-(1)   52/     1E6 : 7C C0                       dw 49276
-(1)   53/     1E8 : 1A E0                       dw 57370
-(1)   54/     1EA : 76 E0                       dw 57462
-(1)   55/     1EC : 77 E0                       dw 57463
- AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 4 - 10/14/2015 19:29:03
+(1)   53/      E6 : 1A E0                       dw 57370
+(1)   54/      E8 : 76 E0                       dw 57462
+(1)   55/      EA : 77 E0                       dw 57463
+(1)   56/      EC : 84 82                       dw 33412
+(1)   57/      EE : 7F E0                       dw 57471
+(1)   58/      F0 : 1E E0                       dw 57374
+(1)   59/      F2 : 40 A0                       dw 41024
+(1)   60/      F4 : 88 80                       dw 32904
+(1)   61/      F6 : 00 8A                       dw 35328
+(1)   62/      F8 : 60 E0                       dw 57440
+(1)   63/      FA : 80 90                       dw 36992
+(1)   64/      FC : 0D E0                       dw 57357
+      57/      FE :                     
+      58/      FE :                     ; ********************************************************************************************************************************
+      59/      FE :                     ;
+      60/      FE :                     ;												Repaint the screen.
+      61/      FE :                     ;
+      62/      FE :                     ; ********************************************************************************************************************************
+      63/      FE :                     
+      64/      FE :                     RepaintScreen:
+      65/      FE : E6                  		mov 	e,l 											; save HL in DE
+      66/      FF : DD                  		mov 	d,h
+      67/     100 : 2E 00               		mvi 	h,_RSStorage/256 								; HL points to storage
+      68/     102 : 36 79               		mvi 	l,_RSStorage&255
+      69/     104 : F8                  		mov 	m,a 											; save A and C
+      70/     105 : 30                  		inr 	l
+      71/     106 : FA                  		mov 	m,c
+      72/     107 : 30                  		inr 	l
+      73/     108 : FC                  		mov 	m,e 											; save old HL
+      74/     109 : 30                  		inr 	l
+      75/     10A : FB                  		mov 	m,d
+      76/     10B : A8                  		xra 	a 												; write $00 to the scope, which sets B7, homes the cursor
+      77/     10C : 51                  		out 	_RSLowScopePort 	
+      78/     10D : 53                  		out		_RSHighScopePort
+      79/     10E :                     
+      80/     10E : 26 29               		mvi 	e,ScreenMap&255 								; this is where we are drawing from.
+      81/     110 : 1E 00               		mvi 	d,ScreenMap/256 								; point HL to screen map
+      82/     112 :                     
+      83/     112 :                     _RSLineLoop:
+      84/     112 : 16 14               		mvi 	c,20 											; print 20 characters a line.
+      85/     114 :                     _RSRenderLoop:
+      86/     114 : F4                  		mov 	l,e 											; copy DE to HL.
+      87/     115 : EB                  		mov 	h,d 	
+      88/     116 : C7                  		mov 	a,m 											; read character from HL.
+      89/     117 : 24 3F               		ani 	03Fh											; 6 bit ASCII
+      90/     119 : 80                  		add 	a 												; double as 2 bytes per font entry.
+      91/     11A :                     
+      92/     11A : 04 7E               		adi 	_RSFont & 255 									; point HL to font data
+      93/     11C : F0                  		mov 	l,a
+      94/     11D : 06 00               		mvi 	a,_RSFont/256
+      95/     11F : 0C 00               		aci 	0
+      96/     121 : E8                  		mov 	h,a
+      97/     122 :                     
+      98/     122 : C7                  		mov 	a,m 											; output data.
+      99/     123 : 51                  		out 	_RSLowScopePort
+     100/     124 : 30                  		inr 	l
+     101/     125 : C7                  		mov 	a,m
+     102/     126 : 53                  		out 	_RSHighScopePort
+     103/     127 :                     
+     104/     127 : 20                  		inr 	e 												; bump DE
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 4 - 10/14/2015 20:08:53
 
 
-(1)   56/     1EE : 84 82                       dw 33412
-(1)   57/     1F0 : 7F E0                       dw 57471
-(1)   58/     1F2 : 1E E0                       dw 57374
-(1)   59/     1F4 : 40 A0                       dw 41024
-(1)   60/     1F6 : 88 80                       dw 32904
-(1)   61/     1F8 : 00 8A                       dw 35328
-(1)   62/     1FA : 60 E0                       dw 57440
-(1)   63/     1FC : 80 90                       dw 36992
-(1)   64/     1FE : 0D E0                       dw 57357
- AS V1.42 Beta [Bld 102] - source file test.asm - page 5 - 10/14/2015 19:29:03
+     105/     128 : 48 2C 01            		jnz 	_RSNoCarry
+     106/     12B : 18                  		inr 	d
+     107/     12C :                     _RSNoCarry:
+     108/     12C : 11                  		dcr 	c 												; done a complete line ?
+     109/     12D : 48 14 01            		jnz 	_RSRenderLoop 									; no, loop back and do another character.
+     110/     130 :                     
+     111/     130 : 06 55               		mvi 	a,_RSNewLineCommand								; output $5555 with bit 15 set, for a new line.
+     112/     132 : 51                  		out 	_RSLowScopePort
+     113/     133 : 06 D5               		mvi 	a,_RSNewLineCommand!80h
+     114/     135 : 53                  		out 	_RSHighScopePort
+     115/     136 :                     
+     116/     136 : C4                  		mov 	a,e
+     117/     137 : 2C 79               		xri 	(ScreenMap+_RSLineCount*20) & 255 				; reached the end of the map.
+     118/     139 : 48 12 01            		jnz 	_RSLineLoop
+     119/     13C :                     
+     120/     13C : 2E 00               		mvi 	h,_RSStorage/256 								; HL points to storage
+     121/     13E : 36 79               		mvi 	l,_RSStorage&255
+     122/     140 : C7                  		mov 	a,m 											; read A 
+     123/     141 : 30                  		inr 	l
+     124/     142 : D7                  		mov 	c,m 											; read C
+     125/     143 : 30                  		inr 	l
+     126/     144 : E7                  		mov 	e,m 											; read L to E
+     127/     145 : 30                  		inr 	l
+     128/     146 : EF                  		mov 	h,m 											; read H
+     129/     147 : F4                  		mov 	l,e 											; fixup L.
+     130/     148 : 07                  		ret
+     131/     149 :                     
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 5 - 10/14/2015 20:08:53
 
 
   symbol table (* = unused):
@@ -216,20 +234,21 @@
 *INSUPMODE :                      0 - | *LISTON :                         1 - |
 *MACEXP :                         1 - | *MOMCPU :                     8008E - |
 *MOMCPUNAME :               8008NEW - | *NESTMAX :                      100 - |
- NOTLC :                         14 C | *PACKING :                        0 - |
+ NOTLC :                         1A C | *PACKING :                        0 - |
 *PADDING :                        1 - | *RELAXED :                        0 - |
- REPAINTSCREEN :                142 C |  SCREENMAP :                    100 C |
- START :                          2 C | *TIME :                    19:29:03 - |
+ REPAINTSCREEN :                 FE C |  SCREENMAP :                     29 C |
+ START :                          8 C | *TIME :                    20:08:53 - |
 *TRUE :                           1 - | *VERSION :                     142F - |
- WAIT :                           5 C |  _RSFONT :                      180 C |
- _RSHIGHSCOPEPORT :               F - |  _RSLINECOUNT :                   4 - |
- _RSLOWSCOPEPORT :                E - |  _RSNEWLINECOMMAND :             55 - |
- _RSRENDERLOOP :                150 C |  _RSRESTORE :                   140 C |
+ WAIT :                           B C |  _RSFONT :                       7E C |
+ _RSHIGHSCOPEPORT :               9 - |  _RSLINECOUNT :                   4 - |
+ _RSLINELOOP :                  112 C |  _RSLOWSCOPEPORT :                8 - |
+ _RSNEWLINECOMMAND :             55 - |  _RSNOCARRY :                   12C C |
+ _RSRENDERLOOP :                114 C |  _RSSTORAGE :                    79 C |
 
-     40 symbols
+     42 symbols
      28 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 6 - 10/14/2015 19:29:03
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 6 - 10/14/2015 20:08:53
 
 
   codepages:
@@ -240,7 +259,7 @@ STANDARD (0 changed characters)
 
 0.01 seconds assembly time
 
-    181 lines source file
+    195 lines source file
       2 passes
       0 errors
       0 warnings

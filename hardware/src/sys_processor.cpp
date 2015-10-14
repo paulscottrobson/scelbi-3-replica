@@ -66,11 +66,11 @@ static BYTE8 interruptKey, stepKey, runKey;
 
 static BYTE8 lowDisplayByte;
 
-#define READPORT02() 	MB = DRVReadKeyboardLatch()									// Read keyboard latch
-#define WRITEPORT09()	DRVClearKeyboardLatch()										// Reset keyboard latch.
+#define READPORT04() 	MB = DRVReadKeyboardLatch()									// Read keyboard latch
+#define WRITEPORT0A()	DRVClearKeyboardLatch()										// Reset keyboard latch.
 
-#define WRITEPORT0E() 	lowDisplayByte = MB 										// Write to display ports.
-#define WRITEPORT0F() 	{ DRVWriteScope((((WORD16)MB) << 8)|lowDisplayByte);isScopeDisplayInUse = 1; }
+#define WRITEPORT08() 	lowDisplayByte = MB 										// Write to display ports.
+#define WRITEPORT09() 	{ DRVWriteScope((((WORD16)MB) << 8)|lowDisplayByte);isScopeDisplayInUse = 1; }
 
 #include "__8008ports.h"															// Do the rest of the ports
 

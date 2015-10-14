@@ -26,7 +26,7 @@
 
 static int xDisplay,yDisplay;														// Display position.
 static BYTE8 displayMemory[20*4];													// Video Memory
-static WORD16 scopeMemory[16*4];													// Scope memory.
+static WORD16 scopeMemory[20*4];													// Scope memory.
 static BYTE8 isScopeEnabled; 														// Non zero if scope display.
 
 static void _DBGXDrawStarburst(SDL_Rect *rc,WORD16 pattern);
@@ -60,7 +60,7 @@ void DBGXWriteDisplay(BYTE8 x,BYTE8 y,BYTE8 ch) {
 
 void DBGXWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {
 	isScopeEnabled = 1;
-	scopeMemory[x+y*16] = latches;
+	scopeMemory[x+y*20] = latches;
 }
 
 // *******************************************************************************************************************************
@@ -164,14 +164,14 @@ void DBGXRender(int *address,int showDisplay) {
 	rc.x = (WIN_WIDTH-rc.w)/2;rc.y = WIN_HEIGHT-64-rc.h;
 	rc2 = rc;rc.x--;rc.y--;rc.w += 2;rc.h += 2;GFXRectangle(&rc,0xFFF);
 	GFXRectangle(&rc2,0x000);
-	for (int x = 0;x < 16;x++) {
+	for (int x = 0;x < 20;x++) {
 		for (int y = 0;y < 4;y++) {
-			rc.x = rc2.x + (x+2) * 8 * 4;
+			rc.x = rc2.x + x * 8 * 4;
 			rc.y = rc2.y + y * 10 * 4;
 			rc.w = 8 * 4;
 			rc.h = 10 * 4;
 			if (isScopeEnabled) {
-				_DBGXDrawStarburst(&rc,scopeMemory[x+y*16]);
+				_DBGXDrawStarburst(&rc,scopeMemory[x+y*20]);
 			} else {
 				GFXCharacter(rc.x,rc.y+3,displayMemory[x+y*20],4,0x0FF,-1);
 			}
