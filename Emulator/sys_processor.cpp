@@ -11,6 +11,9 @@
 
 #include "sys_processor.h"
 #include "drivers.h"
+#ifdef WINDOWS
+#include <stdio.h>
+#endif
 
 // *******************************************************************************************************************************
 //															Timing
@@ -154,7 +157,7 @@ void CPUReset(void) {
 	for (BYTE8 n = 0;n < 8;n++) PC[n] = 0;											// Zero stack for clarity
 	isScopeDisplayInUse = 0;														// Scope display not in use.
 	DRVReset();																		// Reset drivers.
-	//_CPULoadBinary();																// Load binary image.
+	_CPULoadBinary();																// Load binary image.
 }
 
 // *******************************************************************************************************************************
@@ -185,6 +188,10 @@ BYTE8 CPUExecuteSinglePhase(void) {
 		HaltFlag = 0;																// We are no longer halted.
 		interruptMode = 1;															// We are in interrupt mode (from toggles)
 		singleStepMode = 1;															// We are in single step mode.
+		if (isScopeDisplayInUse != 0) {												// Using Oscilloscope display ?
+			isScopeDisplayInUse = 0;												// Switch back.
+			DRVSwitchLEDPanel();
+		}
 	}
 
 	canExecute = (HaltFlag == 0);													// Can execute command if Halt not set

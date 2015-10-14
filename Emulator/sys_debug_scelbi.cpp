@@ -64,6 +64,14 @@ void DBGXWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {
 }
 
 // *******************************************************************************************************************************
+//											Switched back to LED display
+// *******************************************************************************************************************************
+
+void DBGXSetLEDDisplay(void) {
+	isScopeEnabled = 0;
+}
+
+// *******************************************************************************************************************************
 //										  This renders the debug screen
 // *******************************************************************************************************************************
 
@@ -165,7 +173,7 @@ void DBGXRender(int *address,int showDisplay) {
 			if (isScopeEnabled) {
 				_DBGXDrawStarburst(&rc,scopeMemory[x+y*16]);
 			} else {
-				GFXCharacter(rc.x,rc.y,displayMemory[x+y*20],4,0x0F0,-1);
+				GFXCharacter(rc.x,rc.y+3,displayMemory[x+y*20],4,0x0FF,-1);
 			}
 		}
 	}

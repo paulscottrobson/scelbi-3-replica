@@ -45,5 +45,6 @@
 
 void DBGXRender(int *address,int show);												// Render the debugger screen.
 void DBGXWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches);						// Write to scope screen.
+void DBGXSetLEDDisplay(void);
 
 #endif

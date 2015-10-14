@@ -12,7 +12,7 @@
 #include "sys_processor.h"
 #include "drivers.h"
 
-static void _DRV20x4Initialise(void);
+static void _DRVResetPanelDisplay(void);
 static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
 
 static BYTE8 	toggles = 0;														// Position on toggle switches.
@@ -37,7 +37,12 @@ static WORD16 	displayCache[20*4];													// Cached values so no unneeded r
 // *******************************************************************************************************************************
 
 BYTE8 DRVIsPushButtonPressed(BYTE8 button) {
-	return GFXIsKeyPressed(button);
+	switch (button) {
+		case 'I':	return GFXIsKeyPressed(GFXKEY_F2);
+		case 'S':	return GFXIsKeyPressed(GFXKEY_F3);
+		case 'R':	return GFXIsKeyPressed(GFXKEY_F4);
+	}
+	return 0;
 }
 
 // *******************************************************************************************************************************
@@ -85,7 +90,16 @@ void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {
 void DRVReset(void) {
 	GFXDefineCharacter(DRVON_CHAR,0x3e,0x7F,0x7F,0x7F,0x3E);
 	GFXDefineCharacter(DRVOFF_CHAR,0x3e,0x41,0x41,0x41,0x3E);
-	_DRV20x4Initialise();
+	DRVSwitchLEDPanel();
+}
+
+// *******************************************************************************************************************************
+//													Switching back to LED Panel
+// *******************************************************************************************************************************
+
+void DRVSwitchLEDPanel(void) {
+	_DRVResetPanelDisplay();
+	DBGXSetLEDDisplay();
 }
 
 // *******************************************************************************************************************************
@@ -177,10 +191,19 @@ void DRVReset(void) {
  	lcd.createChar(DRVON_CHAR,onChar);
  	lcd.createChar(DRVOFF_CHAR,offChar);
  	lcd.createChar(DRVBURST_CHAR,failChar);
-	_DRV20x4Initialise();
+	_DRVResetPanelDisplay();
 	isScopeCleared = 0;
 }
 
+// *******************************************************************************************************************************
+//													Switching back to LED Panel
+// *******************************************************************************************************************************
+
+void DRVSwitchLEDPanel(void) {
+	_DRVResetPanelDisplay();
+	isScopeCleared = 0;
+	for (BYTE8 i = 0;i < 20*4;i++) displayCache[i] = 0x00;
+}
 
 // *******************************************************************************************************************************
 //													Update the display memory
@@ -211,7 +234,7 @@ void DRVEndFrame(void) {
 
 #define WR(c) WRITEDISPLAY(0xFF,0xFF,c)
 
-static void _DRV20x4Initialise(void) {
+static void _DRVResetPanelDisplay(void) {
 	WRITEDISPLAY(0,0,' ');
 	for (BYTE8 i = 0;i < 79;i++) WRITEDISPLAY(0xFF,0xFF,' ');
 	WRITEDISPLAY(4,0,'P');WR('a');WR('g');WR('e');

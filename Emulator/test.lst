@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 9/30/2015 18:48:21
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 10/14/2015 16:31:46
 
 
        1/       0 :                     	
@@ -61,7 +61,7 @@
       50/     142 : =FH                 _RSHighScopePort = 0Fh											; output port high and start
       51/     142 : =55H                _RSNewLineCommand = 55h 										; code for new line.
       52/     142 :                     
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 9/30/2015 18:48:21
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 10/14/2015 16:31:46
 
 
       53/     142 :                     ; ********************************************************************************************************************************
@@ -124,7 +124,7 @@
      110/     180 :                     ;
      111/     180 :                     ; ********************************************************************************************************************************
      112/     180 :                     
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 9/30/2015 18:48:21
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 10/14/2015 16:31:46
 
 
      113/     180 :                     _RSFont:	
@@ -187,7 +187,7 @@
 (1)   56/     1EE : 84 82                       dw 33412
 (1)   57/     1F0 : 7F E0                       dw 57471
 (1)   58/     1F2 : 1E E0                       dw 57374
- AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 4 - 9/30/2015 18:48:21
+ AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 4 - 10/14/2015 16:31:46
 
 
 (1)   59/     1F4 : 40 A0                       dw 41024
@@ -196,7 +196,7 @@
 (1)   62/     1FA : 60 E0                       dw 57440
 (1)   63/     1FC : 80 90                       dw 36992
 (1)   64/     1FE : 0D E0                       dw 57357
- AS V1.42 Beta [Bld 102] - source file test.asm - page 5 - 9/30/2015 18:48:21
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 5 - 10/14/2015 16:31:46
 
 
   symbol table (* = unused):
@@ -204,7 +204,7 @@
 
 *ARCHITECTURE :  i386-unknown-win32 - | *BIGENDIAN :                      0 - |
 *BRANCHEXT :                      0 - | *CASESENSITIVE :                  0 - |
-*CONSTPI :        3.141592653589793 - | *DATE :                   9/30/2015 - |
+*CONSTPI :        3.141592653589793 - | *DATE :                  10/14/2015 - |
 *FALSE :                          0 - | *FULLPMMU :                       1 - |
 *HAS64 :                          1 - | *HASDSP :                         0 - |
 *HASFPU :                         0 - | *HASPMMU :                        0 - |
@@ -216,7 +216,7 @@
 *NESTMAX :                      100 - | *PACKING :                        0 - |
 *PADDING :                        1 - | *RELAXED :                        0 - |
  REPAINTSCREEN :                142 C |  SCREENMAP :                    100 C |
- START :                          5 C | *TIME :                    18:48:21 - |
+ START :                          5 C | *TIME :                    16:31:46 - |
 *TRUE :                           1 - | *VERSION :                     142F - |
  _RSFONT :                      180 C |  _RSHIGHSCOPEPORT :               F - |
  _RSLINECOUNT :                   4 - |  _RSLOWSCOPEPORT :                E - |
@@ -226,7 +226,7 @@
      39 symbols
      28 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 6 - 9/30/2015 18:48:21
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 6 - 10/14/2015 16:31:46
 
 
   codepages:
