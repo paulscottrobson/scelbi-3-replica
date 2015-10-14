@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 10/14/2015 18:48:14
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 1 - 10/14/2015 19:29:03
 
 
        1/       0 :                     	
@@ -61,7 +61,7 @@
       50/     142 :                     
       51/     142 : =4H                 _RSLineCount = 4 												; number of display lines, note if more than 4 the ScreenMap must move.
       52/     142 : =EH                 _RSLowScopePort = 0Eh 											; output port low
- AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 10/14/2015 18:48:14
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 2 - 10/14/2015 19:29:03
 
 
       53/     142 : =FH                 _RSHighScopePort = 0Fh											; output port high and start
@@ -124,7 +124,7 @@
      110/     180 :                     ; ********************************************************************************************************************************
      111/     180 :                     ;
      112/     180 :                     ;										64 x 2 byte font entries, one for each character
- AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 10/14/2015 18:48:14
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 3 - 10/14/2015 19:29:03
 
 
      113/     180 :                     ;
@@ -187,7 +187,7 @@
 (1)   53/     1E8 : 1A E0                       dw 57370
 (1)   54/     1EA : 76 E0                       dw 57462
 (1)   55/     1EC : 77 E0                       dw 57463
- AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 4 - 10/14/2015 18:48:14
+ AS V1.42 Beta [Bld 102] - source file test.asm(__starburst.inc) - page 4 - 10/14/2015 19:29:03
 
 
 (1)   56/     1EE : 84 82                       dw 33412
@@ -199,7 +199,7 @@
 (1)   62/     1FA : 60 E0                       dw 57440
 (1)   63/     1FC : 80 90                       dw 36992
 (1)   64/     1FE : 0D E0                       dw 57357
- AS V1.42 Beta [Bld 102] - source file test.asm - page 5 - 10/14/2015 18:48:14
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 5 - 10/14/2015 19:29:03
 
 
   symbol table (* = unused):
@@ -219,7 +219,7 @@
  NOTLC :                         14 C | *PACKING :                        0 - |
 *PADDING :                        1 - | *RELAXED :                        0 - |
  REPAINTSCREEN :                142 C |  SCREENMAP :                    100 C |
- START :                          2 C | *TIME :                    18:48:14 - |
+ START :                          2 C | *TIME :                    19:29:03 - |
 *TRUE :                           1 - | *VERSION :                     142F - |
  WAIT :                           5 C |  _RSFONT :                      180 C |
  _RSHIGHSCOPEPORT :               F - |  _RSLINECOUNT :                   4 - |
@@ -229,7 +229,7 @@
      40 symbols
      28 unused symbols
 
- AS V1.42 Beta [Bld 102] - source file test.asm - page 6 - 10/14/2015 18:48:14
+ AS V1.42 Beta [Bld 102] - source file test.asm - page 6 - 10/14/2015 19:29:03
 
 
   codepages:

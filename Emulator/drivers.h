@@ -40,4 +40,7 @@ BYTE8 DRVReadKeyboardLatch(void);
 #define APIN_D2				(4)
 #define APIN_D1				(3)
 #define APIN_D0				(2)
+
+#define APIN_KEYBOARDDATA	(17)
+#define APIN_KEYBOARDCLOCK	(18)
 #endif

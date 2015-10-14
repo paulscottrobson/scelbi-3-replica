@@ -126,11 +126,17 @@ void DRVEndFrame(void) {
 
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
+#include <PS2Keyboard.h>
 
-LiquidCrystal_I2C lcd(0x3F,20,4);
+static LiquidCrystal_I2C lcd(0x3F,20,4);
 static BYTE8 isScopeCleared = 0;
+static PS2Keyboard keyboard;
 
 #define WRITEDISPLAY(x,y,c) DRVAWriteLCD(x,y,c)
+
+// *******************************************************************************************************************************
+//													  Write to LCD
+// *******************************************************************************************************************************
 
 static void DRVAWriteLCD(BYTE8 x,BYTE8 y,BYTE8 c) {
 	if (x < 20 && y < 4) lcd.setCursor(x,y);
@@ -198,6 +204,7 @@ void DRVReset(void) {
  	lcd.createChar(DRVBURST_CHAR,failChar);
 	_DRVResetPanelDisplay();
 	isScopeCleared = 0;
+	keyboard.begin(APIN_KEYBOARDDATA,APIN_KEYBOARDCLOCK);
 }
 
 // *******************************************************************************************************************************
@@ -229,6 +236,9 @@ void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {
 // *******************************************************************************************************************************
 
 void DRVEndFrame(void) {
+	if (keyboard.available()) {
+		keyboardLatch = keyboard.read() | 0x80;
+	}
 }
 
 #endif

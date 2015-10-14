@@ -15,10 +15,10 @@
 static void _DRVResetPanelDisplay(void);
 static void _DRV20x4RefreshPanel(WORD16 address,BYTE8 data,BYTE8 status,BYTE8 intMode,BYTE8 halt,BYTE8 runMode);
 
+static BYTE8    keyboardLatch;														// The keyboard latch.
 static BYTE8 	toggles = 0;														// Position on toggle switches.
 static BYTE8 	xPos,yPos; 															// Position in screen display.
 static WORD16 	displayCache[20*4];													// Cached values so no unneeded rewrites.
-
 
 // *******************************************************************************************************************************
 // *******************************************************************************************************************************
@@ -30,6 +30,8 @@ static WORD16 	displayCache[20*4];													// Cached values so no unneeded r
 
 #include "gfx.h"
 #include "sys_debug_system.h"
+#include <stdio.h>
+
 #define WRITEDISPLAY(x,y,c) DBGXWriteDisplay(x,y,c)
 
 // *******************************************************************************************************************************
@@ -61,6 +63,8 @@ BYTE8 DRVKeyMapper(BYTE8 key,BYTE8 inRunMode) {
 	if (inRunMode != 0 && key >= '0' && key <= '7') {
 		toggles = (toggles << 3) | (key & 7);
 	}
+	int aKey = GFXToASCII(key,1);
+	if (aKey > 0 && aKey < 127) keyboardLatch = aKey | 0x80;
 	return key;
 }
 
@@ -100,6 +104,7 @@ void DRVReset(void) {
 void DRVSwitchLEDPanel(void) {
 	_DRVResetPanelDisplay();
 	DBGXSetLEDDisplay();
+	for (BYTE8 i = 0;i < 20*4;i++) displayCache[i] = 0x00;
 }
 
 // *******************************************************************************************************************************
@@ -121,11 +126,17 @@ void DRVEndFrame(void) {
 
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
+#include <PS2Keyboard.h>
 
-LiquidCrystal_I2C lcd(0x3F,20,4);
+static LiquidCrystal_I2C lcd(0x3F,20,4);
 static BYTE8 isScopeCleared = 0;
+static PS2Keyboard keyboard;
 
 #define WRITEDISPLAY(x,y,c) DRVAWriteLCD(x,y,c)
+
+// *******************************************************************************************************************************
+//													  Write to LCD
+// *******************************************************************************************************************************
 
 static void DRVAWriteLCD(BYTE8 x,BYTE8 y,BYTE8 c) {
 	if (x < 20 && y < 4) lcd.setCursor(x,y);
@@ -193,6 +204,7 @@ void DRVReset(void) {
  	lcd.createChar(DRVBURST_CHAR,failChar);
 	_DRVResetPanelDisplay();
 	isScopeCleared = 0;
+	keyboard.begin(APIN_KEYBOARDDATA,APIN_KEYBOARDCLOCK);
 }
 
 // *******************************************************************************************************************************
@@ -224,6 +236,9 @@ void DRVWriteScopeCharacter(BYTE8 x,BYTE8 y,WORD16 latches) {
 // *******************************************************************************************************************************
 
 void DRVEndFrame(void) {
+	if (keyboard.available()) {
+		keyboardLatch = keyboard.read() | 0x80;
+	}
 }
 
 #endif
@@ -308,4 +323,16 @@ BYTE8 DRVGetASCIICharacter(WORD16 pattern) {
 		if (__starburstFont[ch & 63] == pattern) return ch;
 	}
 	return 0;
+}
+
+// *******************************************************************************************************************************
+//													Handle Keyboard Latch
+// *******************************************************************************************************************************
+
+void DRVClearKeyboardLatch(void) {
+	keyboardLatch = 0;
+}
+
+BYTE8 DRVReadKeyboardLatch(void) {
+	return keyboardLatch;
 }
